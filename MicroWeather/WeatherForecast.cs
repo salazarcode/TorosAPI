@@ -1,4 +1,4 @@
-namespace MicroAuth
+namespace MicroWeather
 {
     public class WeatherForecast
     {

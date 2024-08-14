@@ -22,25 +22,34 @@ namespace MicroAuth.Controllers
         public IActionResult Login([FromBody] LoginRequest request)
         {
             // Aquí validarías al usuario, por simplicidad asumimos que es válido
-            if (request.Username != "user" || request.Password != "password")
+            if (request.Username != "andres" || request.Password != "12345")
                 return Unauthorized();
 
-            var token = GenerateJwtToken(request.Username);
-            return Ok(new AuthResponse { Token = token, Expiration = DateTime.UtcNow.AddHours(1) });
+            var expirationTime = DateTime.UtcNow.AddHours(12);
+            var token = GenerateJwtToken(request.Username, expirationTime);
+            return Ok(new AuthResponse { Token = token, Expiration = expirationTime });
         }
 
-        private string GenerateJwtToken(string username)
+        private string GenerateJwtToken(string username, DateTime expiration)
         {
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[] { new Claim("sub", username) }),
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
+            var key = _configuration["Jwt:Key"];
+            var audience = _configuration["Jwt:Audience"];
+            var issuer = _configuration["Jwt:Issuer"];
 
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var encodedKey = Encoding.UTF8.GetBytes(key);
+            var credentials = new SigningCredentials(new SymmetricSecurityKey(encodedKey), SecurityAlgorithms.HmacSha256Signature);
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
+            {
+                SigningCredentials = credentials,
+                Audience = audience,
+                Issuer = issuer,
+
+                Subject = new ClaimsIdentity(new[] { new Claim("sub", username) }),
+                Expires = expiration,
+            });
+
             return tokenHandler.WriteToken(token);
         }
     }

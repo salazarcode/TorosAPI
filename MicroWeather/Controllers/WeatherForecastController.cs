@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MicroAuth.Controllers
+namespace MicroWeather.Controllers
 {
+    [Authorize]    
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase

@@ -1,6 +1,8 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 
 namespace MicroWeather
@@ -38,6 +40,8 @@ namespace MicroWeather
                 })
                 .AddJwtBearer(options =>
                 {
+                    options.UseSecurityTokenValidators = true;
+
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -46,8 +50,7 @@ namespace MicroWeather
                         ValidateIssuer = true,
                         ValidIssuer = issuer,
 
-                        ValidateAudience = true,
-                        ValidAudience = audience,
+                        ValidateAudience = false,
 
                         ValidateLifetime = true,
                         RequireExpirationTime = true,
@@ -62,7 +65,42 @@ namespace MicroWeather
                             logger.LogError("Authentication failed. Message: " + context.Exception.Message);
                             logger.LogError("Authentication failed. Inner exception message: " + context.Exception.InnerException?.Message);
                             return Task.CompletedTask;
-                        }
+                        },
+
+                        OnMessageReceived = context =>
+                        {
+                            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                            var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+                            if (!string.IsNullOrEmpty(token))
+                            {
+                                var handler = new JwtSecurityTokenHandler();
+                                var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
+
+                                if (jsonToken != null)
+                                {
+                                    logger.LogInformation($"Token Audience: {jsonToken.Audiences.FirstOrDefault()}");
+                                    logger.LogInformation($"Token Claims: {string.Join(", ", jsonToken.Claims.Select(c => $"{c.Type}: {c.Value}"))}");
+                                }
+                            }
+
+                            return Task.CompletedTask;
+
+                        },
+                        //OnTokenValidated = context =>
+                        //{
+                        //    var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+                        //    if (claimsIdentity != null)
+                        //    {
+                        //        var audienceClaim = claimsIdentity.FindFirst(JwtRegisteredClaimNames.Aud)?.Value;
+                        //        if (audienceClaim != audience)
+                        //        {
+                        //            // Si la audiencia no coincide, fallamos la autenticación
+                        //            context.Fail("Invalid audience");
+                        //        }
+                        //    }
+                        //    return Task.CompletedTask;
+                        //},
                     };
                 });
 

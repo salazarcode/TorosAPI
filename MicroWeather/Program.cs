@@ -57,6 +57,10 @@ namespace MicroWeather
                         ClockSkew = TimeSpan.Zero
                     };
 
+                    #region JwtEvents
+                    // Todo este bloque contiene eventos del ciclo de validación del JWT
+                    // necesarios para depurar lo que viene dentro de él
+                    /*
                     options.Events = new JwtBearerEvents
                     {
                         OnAuthenticationFailed = context =>
@@ -87,21 +91,23 @@ namespace MicroWeather
                             return Task.CompletedTask;
 
                         },
-                        //OnTokenValidated = context =>
-                        //{
-                        //    var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
-                        //    if (claimsIdentity != null)
-                        //    {
-                        //        var audienceClaim = claimsIdentity.FindFirst(JwtRegisteredClaimNames.Aud)?.Value;
-                        //        if (audienceClaim != audience)
-                        //        {
-                        //            // Si la audiencia no coincide, fallamos la autenticación
-                        //            context.Fail("Invalid audience");
-                        //        }
-                        //    }
-                        //    return Task.CompletedTask;
-                        //},
+                        OnTokenValidated = context =>
+                        {
+                            var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+                            if (claimsIdentity != null)
+                            {
+                                var audienceClaim = claimsIdentity.FindFirst(JwtRegisteredClaimNames.Aud)?.Value;
+                                if (audienceClaim != audience)
+                                {
+                                    // Si la audiencia no coincide, fallamos la autenticación
+                                    context.Fail("Invalid audience");
+                                }
+                            }
+                            return Task.CompletedTask;
+                        },
                     };
+                    */
+                    #endregion
                 });
 
             // Add services to the container.

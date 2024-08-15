@@ -51,6 +51,7 @@ namespace MicroWeather
                         ValidIssuer = issuer,
 
                         ValidateAudience = false,
+                        ValidAudience = audience,
 
                         ValidateLifetime = true,
                         RequireExpirationTime = true,
@@ -58,55 +59,26 @@ namespace MicroWeather
                     };
 
                     #region JwtEvents
-                    // Todo este bloque contiene eventos del ciclo de validación del JWT
-                    // necesarios para depurar lo que viene dentro de él
-                    /*
                     options.Events = new JwtBearerEvents
                     {
-                        OnAuthenticationFailed = context =>
-                        {
-                            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-                            logger.LogError("Authentication failed. Message: " + context.Exception.Message);
-                            logger.LogError("Authentication failed. Inner exception message: " + context.Exception.InnerException?.Message);
-                            return Task.CompletedTask;
-                        },
-
-                        OnMessageReceived = context =>
-                        {
-                            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-                            var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-
-                            if (!string.IsNullOrEmpty(token))
-                            {
-                                var handler = new JwtSecurityTokenHandler();
-                                var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
-
-                                if (jsonToken != null)
-                                {
-                                    logger.LogInformation($"Token Audience: {jsonToken.Audiences.FirstOrDefault()}");
-                                    logger.LogInformation($"Token Claims: {string.Join(", ", jsonToken.Claims.Select(c => $"{c.Type}: {c.Value}"))}");
-                                }
-                            }
-
-                            return Task.CompletedTask;
-
-                        },
-                        OnTokenValidated = context =>
-                        {
-                            var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
-                            if (claimsIdentity != null)
-                            {
-                                var audienceClaim = claimsIdentity.FindFirst(JwtRegisteredClaimNames.Aud)?.Value;
-                                if (audienceClaim != audience)
-                                {
-                                    // Si la audiencia no coincide, fallamos la autenticación
-                                    context.Fail("Invalid audience");
-                                }
-                            }
-                            return Task.CompletedTask;
-                        },
+                        //Aprovecho este evento para restringir si no se trae el audience
+                        //Lamentablemente la libreria que lee el token aqui no logra obtener 
+                        //el aud que si esta en el token, pero esta dice que no
+                        //OnTokenValidated = context =>
+                        //{
+                        //    var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+                        //    if (claimsIdentity != null)
+                        //    {
+                        //        var audienceClaim = claimsIdentity.FindFirst(JwtRegisteredClaimNames.Aud)?.Value;
+                        //        if (audienceClaim != audience)
+                        //        {
+                        //            // Si la audiencia no coincide, fallamos la autenticación
+                        //            context.Fail("Invalid audience");
+                        //        }
+                        //    }
+                        //    return Task.CompletedTask;
+                        //},
                     };
-                    */
                     #endregion
                 });
 
@@ -127,20 +99,6 @@ namespace MicroWeather
             }
 
             app.UseHttpsRedirection();
-
-            app.Use(async (context, next) =>
-            {
-                // Log the incoming request's authorization header
-                var authHeader = context.Request.Headers["Authorization"].ToString();
-                if (!string.IsNullOrEmpty(authHeader))
-                {
-                    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-                    logger.LogInformation($"Authorization Header: {authHeader}");
-                }
-
-                // Call the next middleware in the pipeline
-                await next.Invoke();
-            });
 
             app.UseCors("AllowEverything");  
 

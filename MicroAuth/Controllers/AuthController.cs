@@ -43,17 +43,13 @@ namespace MicroAuth.Controllers
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
                 SigningCredentials = credentials,
-                Audience = "micro_services" ,
+                Audience = audience,
                 Issuer = issuer,
                 Subject = new ClaimsIdentity(new[] {
                     new Claim("sub", username),
-                    //new Claim(JwtRegisteredClaimNames.Aud, audience)    
                 }),
                 Expires = expiration,
             });
-
-            //var audienceClaim = ((JwtSecurityToken)token).Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Aud);
-            //Console.WriteLine($"Audience: {audienceClaim?.Value}");
 
             return tokenHandler.WriteToken(token);
         }

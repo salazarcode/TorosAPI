@@ -28,8 +28,6 @@ namespace MicroWeather
 
             // Cargar configuración de JWT desde los secretos
             var jwtSettings = builder.Configuration.GetSection("Jwt");
-
-            //var key = jwtSettings["Key"];
             var issuer = jwtSettings["Issuer"];
             var audience = jwtSettings["Audience"];
 

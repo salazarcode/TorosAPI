@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MicroAuth.Controllers
@@ -36,19 +37,24 @@ namespace MicroAuth.Controllers
             var audience = _configuration["Jwt:Audience"];
             var issuer = _configuration["Jwt:Issuer"];
 
-            var encodedKey = Encoding.UTF8.GetBytes(key);
-            var credentials = new SigningCredentials(new SymmetricSecurityKey(encodedKey), SecurityAlgorithms.HmacSha256Signature);
+            var rsa = new RSACryptoServiceProvider();
+            rsa.ImportFromPem(System.IO.File.ReadAllText("private.key"));
+            var signingCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256);
+
+            //var encodedKey = Encoding.UTF8.GetBytes(key);
+            //var credentials = new SigningCredentials(new SymmetricSecurityKey(encodedKey), SecurityAlgorithms.HmacSha256Signature);
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
-                SigningCredentials = credentials,
+                SigningCredentials = signingCredentials,
                 Audience = audience,
                 Issuer = issuer,
+                IssuedAt = DateTime.UtcNow,
                 Subject = new ClaimsIdentity(new[] {
-                    new Claim("sub", username),
+                    new Claim("sub", username)
                 }),
-                Expires = expiration,
+                Expires = expiration                
             });
 
             return tokenHandler.WriteToken(token);

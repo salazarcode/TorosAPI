@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MicroWeather
@@ -28,9 +29,12 @@ namespace MicroWeather
             // Cargar configuración de JWT desde los secretos
             var jwtSettings = builder.Configuration.GetSection("Jwt");
 
-            var key = jwtSettings["Key"];
+            //var key = jwtSettings["Key"];
             var issuer = jwtSettings["Issuer"];
             var audience = jwtSettings["Audience"];
+
+            var rsa = new RSACryptoServiceProvider();
+            rsa.ImportFromPem(File.ReadAllText("public.key"));
 
             builder.Services
                 .AddAuthentication(options =>
@@ -45,7 +49,7 @@ namespace MicroWeather
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                        IssuerSigningKey = new RsaSecurityKey(rsa),
 
                         ValidateIssuer = true,
                         ValidIssuer = issuer,

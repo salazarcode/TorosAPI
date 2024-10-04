@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MicroAuth
+namespace API
 {
     public class Program
     {

@@ -1,4 +1,4 @@
-﻿namespace MicroAuth.Requests
+﻿namespace API.Requests
 {
     public class LoginRequest
     {

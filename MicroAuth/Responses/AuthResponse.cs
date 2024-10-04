@@ -1,4 +1,4 @@
-﻿namespace MicroAuth.Responses
+﻿namespace API.Responses
 {
     public class AuthResponse
     {

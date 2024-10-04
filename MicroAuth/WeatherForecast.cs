@@ -1,4 +1,4 @@
-namespace MicroDomain
+namespace API
 {
     public class WeatherForecast
     {

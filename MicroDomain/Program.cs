@@ -2,15 +2,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
-using System.Text;
 
-namespace MicroAuth
+namespace MicroDomain
 {
     public class Program
     {
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
 
             builder.Services.AddCors(options =>
             {
@@ -58,7 +58,6 @@ namespace MicroAuth
                     };
                 });
 
-            // Add services to the container.
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -82,7 +81,6 @@ namespace MicroAuth
             app.UseAuthorization();
 
             app.MapControllers();
-
 
             app.Run();
         }

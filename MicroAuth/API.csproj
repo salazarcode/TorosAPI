@@ -17,6 +17,9 @@
     <None Update="private.key">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="public.key">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

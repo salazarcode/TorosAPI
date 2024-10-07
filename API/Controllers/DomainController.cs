@@ -1,44 +1,32 @@
-﻿using API.Responses.Domain;
-using Domain.Models;
+﻿using Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Repository;
 
 namespace API.Controllers
 {
-    public class DomainController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class DomainController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly IXClassRepository _classRepo;
 
-        public DomainController(DatabaseContext context)
+        public DomainController(IXClassRepository classRepo)
         {
-            _context = context;
+            _classRepo = classRepo;
         }
 
         [HttpGet]
-        [Route("class/{classKey}/properties")]
-        public IActionResult GetProperties(string classKey = "user")
+        public IActionResult GetAll()
         {
-            var x = _context.XClasses.ToList();
-                //.Include(x => x.XProperties);
-            //foreach (var item. in x)
-            //{
-            //}
+            var res = _classRepo.GetAll();
+            return Ok(res);
+        }
 
-
-            //var properties = res.XProperties.Select(n => {
-            //    return new XPropertyResumeDTO
-            //    {
-            //        ID = n.ID,
-            //        Name = n.Name,
-            //        Key = n.Key,
-            //        IsNullable = n.IsNullable,
-            //        Lenght = n.Lenght,
-            //        PropertyClassKey = n.PropertyClass?.Key
-            //    };
-            //});
-
-            return Ok(x);
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetByID(int id)
+        {
+            var res = _classRepo.GetByID(id);
+            return Ok(res);
         }
     }
 }

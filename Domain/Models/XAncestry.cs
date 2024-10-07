@@ -10,7 +10,7 @@ namespace Domain.Models
     {
         public int XClassID { get; set; }
         public int ParentID { get; set; }
-        public virtual XClass XClass { get; set; }
-        public virtual XClass Parent { get; set; }
+        public XClass XClass { get; set; }
+        public XClass Parent { get; set; }
     }
 }

@@ -1,10 +1,12 @@
+using System.Data;
+using Microsoft.Data.SqlClient;
 
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Cryptography;
-using System.Text;
+
+using Interfaces.Repositories;
+using Repository.Repositories;
 
 namespace API
 {
@@ -14,8 +16,10 @@ namespace API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddScoped<IDbConnection>(sp =>
+                new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<IXClassRepository, XClassRepository>();
 
             builder.Services.AddCors(options =>
             {

@@ -17,26 +17,30 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id)
+        public async Task<IActionResult?> Get([FromRoute] int id)
         {
             var entity = await _classRepo.Details(id);
+            ClassDetailDTO? res = null;
 
-            ClassDetailDTO res = new ClassDetailDTO();
-            res.ID = entity.ID;
-            res.Name = entity.Name;
-            res.Properties = entity.XProperties.Select(p => new PropertyDTO
+            if (entity is not null)
             {
-                ID = p.ID,
-                Name = p.Name,
-                Min = p.Min,
-                Max = p.Max,
-                ClassName = p.XClass.Name
-            }).ToList();
-            res.Ancestries = entity.XAncestries.Select(a => new AncestryDTO
-            {
-                Name = a.Parent.Name,
-                IsPrimitive = a.Parent.IsPrimitive,
-            }).ToList();
+                res = new ClassDetailDTO();
+                res.ID = entity.ID;
+                res.Name = entity.Name;
+                res.Properties = entity.XProperties.Select(p => new PropertyDTO
+                {
+                    ID = p.ID,
+                    Name = p.Name,
+                    Min = p.Min,
+                    Max = p.Max,
+                    ClassName = p.XClass.Name
+                }).ToList();
+                res.Ancestries = entity.XAncestries.Select(a => new AncestryDTO
+                {
+                    Name = a.Parent.Name,
+                    IsPrimitive = a.Parent.IsPrimitive,
+                }).ToList();                
+            }
 
             return Ok(res);
         }

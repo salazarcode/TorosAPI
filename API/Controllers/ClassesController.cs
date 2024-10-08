@@ -1,4 +1,6 @@
-﻿using API.Responses.Domain;
+﻿using API.Responses.Classes;
+using API.Responses.Domain;
+using Domain.Models;
 using Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,7 +44,7 @@ namespace API.Controllers
                 }).ToList();                
             }
 
-            return Ok(res);
+            return entity is null ? NotFound() : Ok(res);
         }
 
         [HttpGet]
@@ -57,7 +59,30 @@ namespace API.Controllers
                     Name = x.Name,
                     IsPrimitive = x.IsPrimitive
                 };
-            }).ToList(); 
+            }).ToList();
+
+            return Ok(res);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] CreateClassDTO input)
+        {
+            var classID = await _classRepo.Create(new XClass
+            {
+                Name = input.Name,
+                IsPrimitive = input.IsPrimitive,
+            });
+
+            var res = await _classRepo.Details(classID);
+
+            return Ok(res);
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id)
+        {
+            var res = await _classRepo.Delete(id);
 
             return Ok(res);
         }

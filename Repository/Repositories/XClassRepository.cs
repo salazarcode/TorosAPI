@@ -37,6 +37,45 @@ namespace Repository.Repositories
             }
         }
 
+        public async Task<int> Create(XClass input)
+        {
+            try
+            {
+                string sql = "INSERT INTO abstract.classes VALUES (@Name, @IsPrimitive);SELECT SCOPE_IDENTITY();";
+
+                var ids = await _dbConnection.QueryAsync<int>(sql, new { 
+                    Name = input.Name, 
+                    IsPrimitive = input.IsPrimitive ? 1 : 0 
+                });
+
+                return ids.First();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        public async Task<bool> Delete(int ID)
+        {
+            try
+            {
+                string sql = "delete from abstract.classes where ID = @id";
+
+                var affectedRows = await _dbConnection.ExecuteAsync(sql, new
+                {
+                    id = ID
+                });
+
+                return affectedRows != 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<XClass?> Details(int id)
         {
             try
@@ -68,15 +107,19 @@ namespace Repository.Repositories
                 var res = await _dbConnection.QueryAsync<XClass, XProperty, XClass,XAncestry,XClass, XClass>(
                     sql: query, 
                     map: (c, p, cx, an, cy) =>{
+                        if (an is not null) { 
+                            an.Parent = cy;
+                            an.XClassID = c.ID;
+                            if (!ancestries.ContainsKey(an.XClassID + "-" + an.ParentID))
+                                ancestries.Add(an.XClassID + "-" + an.ParentID, an);                            
+                        }
 
-                        an.Parent = cy;
-                        an.XClassID = c.ID;
-                        if (!ancestries.ContainsKey(an.XClassID + "-" + an.ParentID))
-                            ancestries.Add(an.XClassID + "-" + an.ParentID, an);
-
-                        p.XClass = cx;
-                        if (!properties.ContainsKey(p.ID))
-                            properties.Add(p.ID, p);
+                        if (p is not null && p.ID != 0)
+                        { 
+                            p.XClass = cx;
+                                if (!properties.ContainsKey(p.ID))
+                                    properties.Add(p.ID, p);    
+                        }
 
                         return c;
                     },
@@ -99,6 +142,11 @@ namespace Repository.Repositories
 
                 throw;
             }
+        }
+
+        public Task<XClass> Update(int ID)
+        {
+            throw new NotImplementedException();
         }
     }
 }

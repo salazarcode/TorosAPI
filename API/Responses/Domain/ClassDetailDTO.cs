@@ -1,0 +1,27 @@
+﻿using Domain.Models;
+
+namespace API.Responses.Domain
+{
+    public class ClassDetailDTO
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public List<PropertyDTO> Properties { get; set; } = new();
+        public List<AncestryDTO> Ancestries { get; set; } = new();
+
+    }
+
+    public class PropertyDTO
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public int Min { get; set; }
+        public int Max { get; set; }
+        public string ClassName { get; set; }
+    }
+    public class AncestryDTO
+    {
+        public string Name { get; set; }
+        public bool IsPrimitive { get; set; } = false;
+    }
+}

@@ -20,6 +20,29 @@ namespace Repository.Repositories
             _dbConnection = dbConnection;
         }
 
+        public async Task<int> AddProperty(XClass xclass, XProperty xproperty)
+        {
+            try
+            {
+                string sql = "INSERT INTO abstract.properties VALUES (@ClassID, @PropertyClassID, @Name, @Min, @Max);SELECT SCOPE_IDENTITY();";
+
+                var ids = await _dbConnection.QueryAsync<int>(sql, new
+                {
+                    ClassID = xclass.ID,
+                    PropertyClassID = xproperty.PropertyClassID,
+                    Name = xproperty.Name,
+                    Min = xproperty.Min,
+                    Max = xproperty.Max
+                });
+
+                return ids.First();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         public async Task<List<XClass>> All()
         {
             try
@@ -144,9 +167,44 @@ namespace Repository.Repositories
             }
         }
 
-        public Task<XClass> Update(int ID)
+        public async Task<bool> RemoveProperty(XClass xclass, XProperty xproperty)
         {
-            throw new NotImplementedException();
+            try
+            {
+                string sql = "delete from abstract.properties where id = @id";
+
+                var affectedRows = await _dbConnection.ExecuteAsync(sql, new
+                {
+                    id = xproperty.ID
+                });
+
+                return affectedRows != 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> Update(XClass input)
+        {
+            try
+            {
+                string sql = "update abstract.class set name = @name, isprimitive = @isprimitive where id = @id";
+
+                var affectedRows = await _dbConnection.ExecuteAsync(sql, new
+                {
+                    name = input.Name,
+                    isprimitive = input.IsPrimitive,
+                    id = input.ID
+                });
+
+                return affectedRows != 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

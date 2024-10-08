@@ -7,7 +7,7 @@ namespace Interfaces.Repositories
         Task<TEntity?> Details(int id);
         Task<List<TEntity>> All();
         Task<int> Create(TEntity input);
-        Task<TEntity> Update(int ID);
+        Task<bool> Update(TEntity input);
         Task<bool> Delete(int ID);
     }
 }

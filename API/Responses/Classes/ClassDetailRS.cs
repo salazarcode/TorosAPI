@@ -1,8 +1,8 @@
 ﻿using Domain.Models;
 
-namespace API.Responses.Domain
+namespace API.Responses.Classes
 {
-    public class ClassDetailDTO
+    public class ClassDetailRS
     {
         public int ID { get; set; }
         public string Name { get; set; }

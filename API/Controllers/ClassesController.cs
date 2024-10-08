@@ -1,8 +1,9 @@
-﻿using API.Responses.Classes;
-using API.Responses.Domain;
+﻿using API.Requests.Classes;
+using API.Responses.Classes;
 using Domain.Models;
 using Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace API.Controllers
 {
@@ -22,11 +23,11 @@ namespace API.Controllers
         public async Task<IActionResult?> Get([FromRoute] int id)
         {
             var entity = await _classRepo.Details(id);
-            ClassDetailDTO? res = null;
+            ClassDetailRS? res = null;
 
             if (entity is not null)
             {
-                res = new ClassDetailDTO();
+                res = new ClassDetailRS();
                 res.ID = entity.ID;
                 res.Name = entity.Name;
                 res.Properties = entity.XProperties.Select(p => new PropertyDTO
@@ -41,7 +42,7 @@ namespace API.Controllers
                 {
                     Name = a.Parent.Name,
                     IsPrimitive = a.Parent.IsPrimitive,
-                }).ToList();                
+                }).ToList();
             }
 
             return entity is null ? NotFound() : Ok(res);
@@ -53,7 +54,7 @@ namespace API.Controllers
             var classes = await _classRepo.All();
 
             var res = classes.Select(x => {
-                return new ClassDTO
+                return new ClassRS
                 {
                     ID = x.ID,
                     Name = x.Name,
@@ -65,7 +66,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateClassDTO input)
+        public async Task<IActionResult> Create([FromBody] CreateClassRQ input)
         {
             var classID = await _classRepo.Create(new XClass
             {
@@ -76,6 +77,69 @@ namespace API.Controllers
             var res = await _classRepo.Details(classID);
 
             return Ok(res);
+        }
+
+        [HttpPatch]
+        [Route("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateClassRQ input)
+        {
+            var c = await _classRepo.Details(id);
+            if (c is null)
+                return NotFound();
+
+            var updateClass = new XClass
+            {
+                Name = input.Name,
+                IsPrimitive = input.IsPrimitive,
+                ID = id
+            };
+
+            var res = await _classRepo.Update(updateClass);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("{ClassID}/property")]
+        public async Task<IActionResult> AddProperty([FromRoute] int ClassID, [FromBody] AddPropertyRQ input)
+        {
+            var c = await _classRepo.Details(ClassID);
+            if (c is null)
+                return NotFound();
+
+            var property = new XProperty {
+                ClassID = c.ID,
+                PropertyClassID = input.PropertyClassID,
+                Name = input.Name,
+                Min = input.Min,
+                Max = input.Max,
+            };
+
+            var newPropertyID = await _classRepo.AddProperty(c, property);
+
+            property.ID = newPropertyID;
+
+            var res = await _classRepo.Details(c.ID);
+
+            return Ok(res);
+        }
+
+        [HttpDelete]
+        [Route("{ClassID}/property/{PropertyID}")]
+        public async Task<IActionResult> RemoveProperty([FromRoute] int ClassID, [FromRoute] int PropertyID)
+        {
+            var c = await _classRepo.Details(ClassID);
+            if (c is null)
+                return NotFound();
+
+            var property = c.XProperties.FirstOrDefault(x => x.ID == PropertyID);
+
+            if (property is null)
+                return NotFound();
+
+            var deleted = await _classRepo.RemoveProperty(c, property);
+
+            return Ok();
         }
 
         [HttpDelete]

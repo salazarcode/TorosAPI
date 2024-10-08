@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 
 using Interfaces.Repositories;
 using Repository.Repositories;
+using Microsoft.OpenApi.Models;
 
 namespace API
 {
@@ -71,7 +72,14 @@ namespace API
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CustomBPMS API", Version = "v1" });
+
+                // Indicar que int? es nullable
+                c.MapType<int?>(() => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true });
+            });
 
             var app = builder.Build();
 

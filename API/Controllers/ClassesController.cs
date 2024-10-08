@@ -5,27 +5,27 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DomainController : ControllerBase
+    public class ClassesController : ControllerBase
     {
         private readonly IXClassRepository _classRepo;
 
-        public DomainController(IXClassRepository classRepo)
+        public ClassesController(IXClassRepository classRepo)
         {
             _classRepo = classRepo;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        [Route("{id}")]
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
-            var res = _classRepo.GetAll();
+            var res = await _classRepo.Details(id);
             return Ok(res);
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public IActionResult GetByID(int id)
+        public async Task<IActionResult> Get()
         {
-            var res = _classRepo.GetByID(id);
+            var res = await _classRepo.All();
             return Ok(res);
         }
     }

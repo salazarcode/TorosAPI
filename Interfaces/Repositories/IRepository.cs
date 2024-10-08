@@ -2,7 +2,7 @@
 {
     public interface IRepository<TEntity>
     {
-        List<TEntity> GetAll();
-        TEntity GetByID(int id);
+        Task<TEntity?> Details(int id);
+        Task<List<TEntity>> All();
     }
 }

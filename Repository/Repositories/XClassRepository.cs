@@ -20,29 +20,6 @@ namespace Repository.Repositories
             _dbConnection = dbConnection;
         }
 
-        public async Task<int> AddProperty(XClass xclass, XProperty xproperty)
-        {
-            try
-            {
-                string sql = "INSERT INTO abstract.properties VALUES (@ClassID, @PropertyClassID, @Name, @Min, @Max);SELECT SCOPE_IDENTITY();";
-
-                var ids = await _dbConnection.QueryAsync<int>(sql, new
-                {
-                    ClassID = xclass.ID,
-                    PropertyClassID = xproperty.PropertyClassID,
-                    Name = xproperty.Name,
-                    Min = xproperty.Min,
-                    Max = xproperty.Max
-                });
-
-                return ids.First();
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public async Task<List<XClass>> All()
         {
             try
@@ -103,62 +80,32 @@ namespace Repository.Repositories
         {
             try
             {
-                string query = $@"
-                                SELECT 
-                                    c.*, 
-                                    p.id propertyID, 
-                                    p.*, 
-                                    cx.id propertyClassID, 
-                                    cx.*,
-									an.ParentID ParentID,
-									an.*,
-									cy.ID ParentClassID,
-									cy.*
-                                FROM 
-                                    abstract.classes c 
-                                    left join Abstract.Properties p on p.ClassID = c.ID
-                                    left join Abstract.Classes cx on p.PropertyClassID = cx.ID
-                                    left join Abstract.Ancestries an on c.ID = an.ClassID
-									left join Abstract.Classes cy on an.ParentID = cy.ID
-                                WHERE 
-                                    c.Id = @Id
-                ";
-
-                var properties = new Dictionary<int, XProperty>();
-                var ancestries = new Dictionary<string, XAncestry>();
-
-                var res = await _dbConnection.QueryAsync<XClass, XProperty, XClass,XAncestry,XClass, XClass>(
-                    sql: query, 
-                    map: (c, p, cx, an, cy) =>{
-                        if (an is not null) { 
-                            an.Parent = cy;
-                            an.XClassID = c.ID;
-                            if (!ancestries.ContainsKey(an.XClassID + "-" + an.ParentID))
-                                ancestries.Add(an.XClassID + "-" + an.ParentID, an);                            
-                        }
-
-                        if (p is not null && p.ID != 0)
-                        { 
-                            p.XClass = cx;
-                                if (!properties.ContainsKey(p.ID))
-                                    properties.Add(p.ID, p);    
-                        }
-
-                        return c;
-                    },
-                    splitOn: "propertyID,propertyClassID,ParentID,ParentClassID",
-                    param: new { 
-                        Id = id 
-                    }
-                );
-
-                if (res.Count() != 0)
+                // Abrir manualmente la conexión si no está abierta
+                if (_dbConnection.State == ConnectionState.Closed)
                 {
-                    res.First().XProperties = properties.Values.ToList();
-                    res.First().XAncestries = ancestries.Values.ToList();
+                    _dbConnection.Open();
                 }
 
-                return res.FirstOrDefault();
+                var classTask = _dbConnection.QueryAsync<XClass>("select * from abstract.classes where id = @id", new { id = id });
+                var ancestriesTask = GetAncestries(id);
+                var propertiesTask = GetProperties(id);
+
+                await Task.WhenAll(classTask, ancestriesTask, propertiesTask);
+
+                var classRes = await classTask;
+                var xAncestries = await ancestriesTask;
+                var xProperties = await propertiesTask;
+
+                // Verificar si se encontró la clase
+                if (!classRes.Any())
+                    throw new Exception("Class not found");
+
+                // Poblar la entidad con los resultados obtenidos
+                XClass xclass = classRes.First();
+                xclass.XProperties = xProperties;
+                xclass.XAncestries = xAncestries;
+
+                return xclass;
             }
             catch (Exception)
             {
@@ -166,26 +113,6 @@ namespace Repository.Repositories
                 throw;
             }
         }
-
-        public async Task<bool> RemoveProperty(XClass xclass, XProperty xproperty)
-        {
-            try
-            {
-                string sql = "delete from abstract.properties where id = @id";
-
-                var affectedRows = await _dbConnection.ExecuteAsync(sql, new
-                {
-                    id = xproperty.ID
-                });
-
-                return affectedRows != 0;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public async Task<bool> Update(XClass input)
         {
             try
@@ -203,6 +130,138 @@ namespace Repository.Repositories
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+
+        public async Task<int> AddProperty(int ClassID, XProperty xproperty)
+        {
+            try
+            {
+                string sql = "INSERT INTO abstract.properties VALUES (@ClassID, @PropertyClassID, @Name, @Min, @Max);SELECT SCOPE_IDENTITY();";
+
+                var ids = await _dbConnection.QueryAsync<int>(sql, new
+                {
+                    ClassID = ClassID,
+                    PropertyClassID = xproperty.PropertyClassID,
+                    Name = xproperty.Name,
+                    Min = xproperty.Min,
+                    Max = xproperty.Max
+                });
+
+                return ids.First();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> RemoveProperty(int PropertyID)
+        {
+            try
+            {
+                string sql = "delete from abstract.properties where id = @id";
+
+                var affectedRows = await _dbConnection.ExecuteAsync(sql, new
+                {
+                    id = PropertyID
+                });
+
+                return affectedRows != 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<XProperty>> GetProperties(int ClassID)
+        {
+            try
+            {
+                var sql = $@"                
+                    select 
+                        p.*,
+                        c.id PClassID,
+                        c.*
+                    from Abstract.Properties p
+                    inner join abstract.classes c on p.PropertyClassID = c.ID
+                    where p.ClassID in(
+	                    select 
+		                    id
+	                    from 
+		                    Abstract.Classes c
+	                    where 
+		                    c.ID = @ClassID
+	                    union
+	                    select 
+		                    parentid 
+	                    from 
+		                    Abstract.Ancestries an
+	                    where
+		                    an.ClassID = @ClassID
+                    )
+                ";
+
+                var res = await _dbConnection.QueryAsync<XProperty, XClass, XProperty>(
+                    sql, 
+                    map: (p, c) => {
+                        p.XClass = c;
+                        return p;
+                    },
+                    param: new { 
+                        ClassID = ClassID
+                    },
+                    splitOn: "PClassID"
+                );
+
+                return res.ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<List<XAncestry>> GetAncestries(int ClassID)
+        {
+            try
+            {
+                var sql = $@"                
+                    select 
+                        an.*,
+                        parent.ID PClassID,
+                        parent.*,
+	                    child.ID CClassID,
+	                    child.*
+                    from Abstract.Ancestries an
+                    left join Abstract.Classes parent on parent.ID = an.parentid
+                    left join Abstract.Classes child on child.ID = an.ClassID
+                    where 
+	                    child.id = @ClassID
+                ";
+
+                var res = await _dbConnection.QueryAsync<XAncestry, XClass,XClass, XAncestry>(
+                    sql,
+                    map: (an, parent, child) => {
+                        an.Parent = parent;
+                        an.XClass = child;
+                        return an;
+                    },
+                    param: new
+                    {
+                        ClassID = ClassID
+                    },
+                    splitOn: "PClassID,CClassID"
+                );
+
+                return res.ToList();
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }

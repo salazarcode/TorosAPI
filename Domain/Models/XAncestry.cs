@@ -8,7 +8,7 @@ namespace Domain.Models
 {
     public class XAncestry
     {
-        public int XClassID { get; set; }
+        public int ClassID { get; set; }
         public int ParentID { get; set; }
         public XClass XClass { get; set; }
         public XClass Parent { get; set; }

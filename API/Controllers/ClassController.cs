@@ -9,11 +9,11 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClassesController : ControllerBase
+    public class ClassController : ControllerBase
     {
         private readonly IXClassRepository _classRepo;
 
-        public ClassesController(IXClassRepository classRepo)
+        public ClassController(IXClassRepository classRepo)
         {
             _classRepo = classRepo;
         }
@@ -115,7 +115,7 @@ namespace API.Controllers
                 Max = input.Max,
             };
 
-            var newPropertyID = await _classRepo.AddProperty(c, property);
+            var newPropertyID = await _classRepo.AddProperty(c.ID, property);
 
             property.ID = newPropertyID;
 
@@ -137,7 +137,7 @@ namespace API.Controllers
             if (property is null)
                 return NotFound();
 
-            var deleted = await _classRepo.RemoveProperty(c, property);
+            var deleted = await _classRepo.RemoveProperty(property.ID);
 
             return Ok();
         }

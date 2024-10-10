@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Logs\" />
     <Folder Include="Interfaces\Notifications\Email\" />
     <Folder Include="Interfaces\Notifications\RealTime\" />
   </ItemGroup>

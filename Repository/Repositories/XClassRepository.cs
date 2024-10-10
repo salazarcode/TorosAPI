@@ -80,7 +80,6 @@ namespace Repository.Repositories
         {
             try
             {
-                // Abrir manualmente la conexión si no está abierta
                 if (_dbConnection.State == ConnectionState.Closed)
                 {
                     _dbConnection.Open();

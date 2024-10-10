@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\DTOs\DTOs.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\Logs\" />
+    <Folder Include="Interfaces\Notifications\Email\" />
+    <Folder Include="Interfaces\Notifications\RealTime\" />
+  </ItemGroup>
+
 </Project>

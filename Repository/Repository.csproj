@@ -11,8 +11,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Interfaces\Interfaces.csproj" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DTOs\DTOs.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Services\Services.csproj" />
+	</ItemGroup>
 
 </Project>

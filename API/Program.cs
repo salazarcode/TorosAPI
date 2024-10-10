@@ -4,10 +4,9 @@ using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Cryptography;
-
-using Interfaces.Repositories;
 using Repository.Repositories;
 using Microsoft.OpenApi.Models;
+using Services.Interfaces.Repositories;
 
 namespace API
 {

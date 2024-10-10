@@ -1,5 +1,6 @@
 ﻿using API.Requests.Classes;
 using API.Responses.Classes;
+using Domain.Interfaces;
 using Domain.Models;
 using Interfaces.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -11,144 +12,144 @@ namespace API.Controllers
     [ApiController]
     public class ClassController : ControllerBase
     {
-        private readonly IXClassRepository _classRepo;
+        private readonly IXClassService _classService;
 
-        public ClassController(IXClassRepository classRepo)
+        public ClassController(IXClassService classService)
         {
-            _classRepo = classRepo;
+            _classService = classService;
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult?> Get([FromRoute] int id)
-        {
-            var entity = await _classRepo.Details(id);
-            ClassDetailRS? res = null;
+        //[HttpGet]
+        //[Route("{id}")]
+        //public async Task<IActionResult?> Get([FromRoute] int id)
+        //{
+        //    var entity = await _classService.Details(id);
+        //    ClassDetailRS? res = null;
 
-            if (entity is not null)
-            {
-                res = new ClassDetailRS();
-                res.ID = entity.ID;
-                res.Name = entity.Name;
-                res.Properties = entity.XProperties.Select(p => new PropertyDTO
-                {
-                    ID = p.ID,
-                    Name = p.Name,
-                    Min = p.Min,
-                    Max = p.Max,
-                    ClassName = p.XClass.Name
-                }).ToList();
-                res.Ancestries = entity.XAncestries.Select(a => new AncestryDTO
-                {
-                    Name = a.Parent.Name,
-                    IsPrimitive = a.Parent.IsPrimitive,
-                }).ToList();
-            }
+        //    if (entity is not null)
+        //    {
+        //        res = new ClassDetailRS();
+        //        res.ID = entity.ID;
+        //        res.Name = entity.Name;
+        //        res.Properties = entity.XProperties.Select(p => new PropertyDTO
+        //        {
+        //            ID = p.ID,
+        //            Name = p.Name,
+        //            Min = p.Min,
+        //            Max = p.Max,
+        //            ClassName = p.XClass.Name
+        //        }).ToList();
+        //        res.Ancestries = entity.XAncestries.Select(a => new AncestryDTO
+        //        {
+        //            Name = a.Parent.Name,
+        //            IsPrimitive = a.Parent.IsPrimitive,
+        //        }).ToList();
+        //    }
 
-            return entity is null ? NotFound() : Ok(res);
-        }
+        //    return entity is null ? NotFound() : Ok(res);
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var classes = await _classRepo.All();
+        //[HttpGet]
+        //public async Task<IActionResult> Get()
+        //{
+        //    var classes = await _classService.All();
 
-            var res = classes.Select(x => {
-                return new ClassRS
-                {
-                    ID = x.ID,
-                    Name = x.Name,
-                    IsPrimitive = x.IsPrimitive
-                };
-            }).ToList();
+        //    var res = classes.Select(x => {
+        //        return new ClassRS
+        //        {
+        //            ID = x.ID,
+        //            Name = x.Name,
+        //            IsPrimitive = x.IsPrimitive
+        //        };
+        //    }).ToList();
 
-            return Ok(res);
-        }
+        //    return Ok(res);
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateClassRQ input)
-        {
-            var classID = await _classRepo.Create(new XClass
-            {
-                Name = input.Name,
-                IsPrimitive = input.IsPrimitive,
-            });
+        //[HttpPost]
+        //public async Task<IActionResult> Create([FromBody] CreateClassRQ input)
+        //{
+        //    var classID = await _classService.Create(new XClass
+        //    {
+        //        Name = input.Name,
+        //        IsPrimitive = input.IsPrimitive,
+        //    });
 
-            var res = await _classRepo.Details(classID);
+        //    var res = await _classService.Details(classID);
 
-            return Ok(res);
-        }
+        //    return Ok(res);
+        //}
 
-        [HttpPatch]
-        [Route("{id}")]
-        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateClassRQ input)
-        {
-            var c = await _classRepo.Details(id);
-            if (c is null)
-                return NotFound();
+        //[HttpPatch]
+        //[Route("{id}")]
+        //public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateClassRQ input)
+        //{
+        //    var c = await _classService.Details(id);
+        //    if (c is null)
+        //        return NotFound();
 
-            var updateClass = new XClass
-            {
-                Name = input.Name,
-                IsPrimitive = input.IsPrimitive,
-                ID = id
-            };
+        //    var updateClass = new XClass
+        //    {
+        //        Name = input.Name,
+        //        IsPrimitive = input.IsPrimitive,
+        //        ID = id
+        //    };
 
-            var res = await _classRepo.Update(updateClass);
+        //    var res = await _classService.Update(updateClass);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
-        [HttpPost]
-        [Route("{ClassID}/property")]
-        public async Task<IActionResult> AddProperty([FromRoute] int ClassID, [FromBody] AddPropertyRQ input)
-        {
-            var c = await _classRepo.Details(ClassID);
-            if (c is null)
-                return NotFound();
+        //[HttpPost]
+        //[Route("{ClassID}/property")]
+        //public async Task<IActionResult> AddProperty([FromRoute] int ClassID, [FromBody] AddPropertyRQ input)
+        //{
+        //    var c = await _classService.Details(ClassID);
+        //    if (c is null)
+        //        return NotFound();
 
-            var property = new XProperty {
-                ClassID = c.ID,
-                PropertyClassID = input.PropertyClassID,
-                Name = input.Name,
-                Min = input.Min,
-                Max = input.Max,
-            };
+        //    var property = new XProperty {
+        //        ClassID = c.ID,
+        //        PropertyClassID = input.PropertyClassID,
+        //        Name = input.Name,
+        //        Min = input.Min,
+        //        Max = input.Max,
+        //    };
 
-            var newPropertyID = await _classRepo.AddProperty(c.ID, property);
+        //    var newPropertyID = await _classService.AddProperty(c.ID, property);
 
-            property.ID = newPropertyID;
+        //    property.ID = newPropertyID;
 
-            var res = await _classRepo.Details(c.ID);
+        //    var res = await _classService.Details(c.ID);
 
-            return Ok(res);
-        }
+        //    return Ok(res);
+        //}
 
-        [HttpDelete]
-        [Route("{ClassID}/property/{PropertyID}")]
-        public async Task<IActionResult> RemoveProperty([FromRoute] int ClassID, [FromRoute] int PropertyID)
-        {
-            var c = await _classRepo.Details(ClassID);
-            if (c is null)
-                return NotFound();
+        //[HttpDelete]
+        //[Route("{ClassID}/property/{PropertyID}")]
+        //public async Task<IActionResult> RemoveProperty([FromRoute] int ClassID, [FromRoute] int PropertyID)
+        //{
+        //    var c = await _classService.Details(ClassID);
+        //    if (c is null)
+        //        return NotFound();
 
-            var property = c.XProperties.FirstOrDefault(x => x.ID == PropertyID);
+        //    var property = c.XProperties.FirstOrDefault(x => x.ID == PropertyID);
 
-            if (property is null)
-                return NotFound();
+        //    if (property is null)
+        //        return NotFound();
 
-            var deleted = await _classRepo.RemoveProperty(property.ID);
+        //    var deleted = await _classService.RemoveProperty(property.ID);
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
-        [HttpDelete]
-        [Route("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
-        {
-            var res = await _classRepo.Delete(id);
+        //[HttpDelete]
+        //[Route("{id}")]
+        //public async Task<IActionResult> Delete([FromRoute] int id)
+        //{
+        //    var res = await _classService.Delete(id);
 
-            return Ok(res);
-        }
+        //    return Ok(res);
+        //}
     }
 }

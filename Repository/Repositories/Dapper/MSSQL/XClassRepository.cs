@@ -1,8 +1,10 @@
 ﻿using Dapper;
+using Domain.Interfaces;
 using Domain.Models;
+using System.Data;
 using static Dapper.SqlMapper;
 
-namespace Repository.Repositories
+namespace Infrastructure.Repositories.Dapper.MSSQL
 {
     public class XClassRepository : IXClassRepository
     {
@@ -12,7 +14,7 @@ namespace Repository.Repositories
             _dbConnection = dbConnection;
         }
 
-        public async Task<List<XClass>> All()
+        public async Task<List<XClass>> Get()
         {
             try
             {
@@ -29,15 +31,53 @@ namespace Repository.Repositories
             }
         }
 
+        public async Task<XClass?> Get(int id)
+        {
+            try
+            {
+                if (_dbConnection.State == ConnectionState.Closed)
+                {
+                    _dbConnection.Open();
+                }
+
+                var classTask = _dbConnection.QueryAsync<XClass>("select * from abstract.classes where id = @id", new { id });
+                var ancestriesTask = GetAncestries(id);
+                var propertiesTask = GetProperties(id);
+
+                await Task.WhenAll(classTask, ancestriesTask, propertiesTask);
+
+                var classRes = await classTask;
+                var xAncestries = await ancestriesTask;
+                var xProperties = await propertiesTask;
+
+                // Verificar si se encontró la clase
+                if (!classRes.Any())
+                    throw new Exception("Class not found");
+
+                // Poblar la entidad con los resultados obtenidos
+                XClass xclass = classRes.First();
+                xclass.XProperties = xProperties;
+                xclass.XAncestries = xAncestries;
+
+                return xclass;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public async Task<int> Create(XClass input)
         {
             try
             {
                 string sql = "INSERT INTO abstract.classes VALUES (@Name, @IsPrimitive);SELECT SCOPE_IDENTITY();";
 
-                var ids = await _dbConnection.QueryAsync<int>(sql, new { 
-                    Name = input.Name, 
-                    IsPrimitive = input.IsPrimitive ? 1 : 0 
+                var ids = await _dbConnection.QueryAsync<int>(sql, new
+                {
+                    input.Name,
+                    IsPrimitive = input.IsPrimitive ? 1 : 0
                 });
 
                 return ids.First();
@@ -68,42 +108,7 @@ namespace Repository.Repositories
             }
         }
 
-        public async Task<XClass?> Details(int id)
-        {
-            try
-            {
-                if (_dbConnection.State == ConnectionState.Closed)
-                {
-                    _dbConnection.Open();
-                }
 
-                var classTask = _dbConnection.QueryAsync<XClass>("select * from abstract.classes where id = @id", new { id = id });
-                var ancestriesTask = GetAncestries(id);
-                var propertiesTask = GetProperties(id);
-
-                await Task.WhenAll(classTask, ancestriesTask, propertiesTask);
-
-                var classRes = await classTask;
-                var xAncestries = await ancestriesTask;
-                var xProperties = await propertiesTask;
-
-                // Verificar si se encontró la clase
-                if (!classRes.Any())
-                    throw new Exception("Class not found");
-
-                // Poblar la entidad con los resultados obtenidos
-                XClass xclass = classRes.First();
-                xclass.XProperties = xProperties;
-                xclass.XAncestries = xAncestries;
-
-                return xclass;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
         public async Task<bool> Update(XClass input)
         {
             try
@@ -133,11 +138,11 @@ namespace Repository.Repositories
 
                 var ids = await _dbConnection.QueryAsync<int>(sql, new
                 {
-                    ClassID = ClassID,
-                    PropertyClassID = xproperty.PropertyClassID,
-                    Name = xproperty.Name,
-                    Min = xproperty.Min,
-                    Max = xproperty.Max
+                    ClassID,
+                    xproperty.PropertyClassID,
+                    xproperty.Name,
+                    xproperty.Min,
+                    xproperty.Max
                 });
 
                 return ids.First();
@@ -196,13 +201,15 @@ namespace Repository.Repositories
                 ";
 
                 var res = await _dbConnection.QueryAsync<XProperty, XClass, XProperty>(
-                    sql, 
-                    map: (p, c) => {
+                    sql,
+                    map: (p, c) =>
+                    {
                         p.XClass = c;
                         return p;
                     },
-                    param: new { 
-                        ClassID = ClassID
+                    param: new
+                    {
+                        ClassID
                     },
                     splitOn: "PClassID"
                 );
@@ -234,16 +241,17 @@ namespace Repository.Repositories
 	                    child.id = @ClassID
                 ";
 
-                var res = await _dbConnection.QueryAsync<XAncestry, XClass,XClass, XAncestry>(
+                var res = await _dbConnection.QueryAsync<XAncestry, XClass, XClass, XAncestry>(
                     sql,
-                    map: (an, parent, child) => {
+                    map: (an, parent, child) =>
+                    {
                         an.Parent = parent;
                         an.XClass = child;
                         return an;
                     },
                     param: new
                     {
-                        ClassID = ClassID
+                        ClassID
                     },
                     splitOn: "PClassID,CClassID"
                 );

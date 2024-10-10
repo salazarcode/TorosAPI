@@ -1,12 +1,12 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
-
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Cryptography;
-using Repository.Repositories;
 using Microsoft.OpenApi.Models;
-using Services.Interfaces.Repositories;
+using Application;
+using Domain.Interfaces;
+using Infrastructure.Repositories.Dapper.MSSQL;
 
 namespace API
 {
@@ -16,10 +16,14 @@ namespace API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddScoped<IDbConnection>(sp =>
-                new SqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+            builder.Services.AddScoped<IDbConnection>(sp => {
+                var cnnStr = builder.Configuration.GetConnectionString("DefaultConnection");
+                var connection = new SqlConnection(cnnStr);
+                return connection;
+            });
 
-            builder.Services.AddScoped<IXClassRepository, XClassRepository>();
+            builder.Services.AddSingleton<IXClassRepository, XClassRepository>();
+            builder.Services.AddSingleton<XClassService>();
 
             builder.Services.AddCors(options =>
             {

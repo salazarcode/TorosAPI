@@ -8,18 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.35" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
   </ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\DTOs\DTOs.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Services\Services.csproj" />
+		<ProjectReference Include="..\Application\Application.csproj" />
 	</ItemGroup>
 
 </Project>

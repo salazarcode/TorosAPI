@@ -7,13 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\DTOs\DTOs.csproj" />
+    <Compile Remove="Interfaces\Notifications\**" />
+    <EmbeddedResource Remove="Interfaces\Notifications\**" />
+    <None Remove="Interfaces\Notifications\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Notifications\Email\" />
-    <Folder Include="Interfaces\Notifications\RealTime\" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

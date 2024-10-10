@@ -1,8 +1,8 @@
 ﻿using Domain.Models;
 
-namespace Interfaces.Repositories
+namespace Domain.Interfaces
 {
-    public interface IXClassRepository: IRepository<XClass>
+    public interface IXClassRepository : IRepository<XClass>
     {
         Task<int> AddProperty(int ClassID, XProperty xproperty);
         Task<bool> RemoveProperty(int PropertyID);

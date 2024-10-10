@@ -89,9 +89,9 @@ namespace API.Controllers
 
             var updateClass = new XClass
             {
+                ID = id,
                 Name = input.Name,
-                IsPrimitive = input.IsPrimitive,
-                ID = id
+                IsPrimitive = input.IsPrimitive
             };
 
             var res = await _classService.Update(updateClass);

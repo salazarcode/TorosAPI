@@ -21,7 +21,7 @@ namespace API.Controllers
         [Route("{id}")]
         public async Task<IActionResult?> Get([FromRoute] int id)
         {
-            var entity = await _classService.Get(id);
+            var entity = await _classService.Get(id, true);
             ClassDetailRS? res = null;
 
             if (entity is not null)
@@ -35,7 +35,7 @@ namespace API.Controllers
                     Name = p.Name,
                     Min = p.Min,
                     Max = p.Max,
-                    ClassName = p.XClass.Name
+                    ClassName = p.PropertyClass.Name
                 }).ToList();
                 res.Ancestries = entity.XAncestries.Select(a => new AncestryDTO
                 {
@@ -104,6 +104,7 @@ namespace API.Controllers
         public async Task<IActionResult> AddProperty([FromRoute] int ClassID, [FromBody] AddPropertyRQ input)
         {
             var c = await _classService.Get(ClassID);
+
             if (c is null)
                 return NotFound();
 
@@ -120,7 +121,7 @@ namespace API.Controllers
 
             property.ID = newPropertyID;
 
-            var res = await _classService.Get(c.ID);
+            var res = await _classService.Get(c.ID, true);
 
             return Ok(res);
         }
@@ -129,7 +130,7 @@ namespace API.Controllers
         [Route("{ClassID}/property/{PropertyID}")]
         public async Task<IActionResult> RemoveProperty([FromRoute] int ClassID, [FromRoute] int PropertyID)
         {
-            var c = await _classService.Get(ClassID);
+            var c = await _classService.Get(ClassID, true);
             if (c is null)
                 return NotFound();
 

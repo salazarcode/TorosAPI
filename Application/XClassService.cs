@@ -11,11 +11,11 @@ namespace Application
             repository = repo;
         }
 
-        public async Task<XClass?> Get(int id)
+        public async Task<XClass?> Get(int id, bool WithRelations = false)
         {
             try
             {
-                var entity = await repository.Get(id);
+                var entity = await repository.Get(id, WithRelations);
                 return entity;
             }
             catch (Exception)

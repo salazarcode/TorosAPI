@@ -31,7 +31,50 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
             }
         }
 
-        public async Task<XClass?> Get(int id)
+        public async Task<XClass?> Get(int id, bool WithRelations = false)
+        {
+            try
+            {
+                if (WithRelations)
+                {
+                    var res = await GetWithRelations(id);
+                    return res;
+                }
+                else {
+                    if (_dbConnection.State == ConnectionState.Closed)
+                    {
+                        _dbConnection.Open();
+                    }
+
+                    var classTask = _dbConnection.QueryAsync<XClass>("select * from abstract.classes where id = @id", new { id });
+                    var ancestriesTask = GetAncestries(id);
+                    var propertiesTask = GetProperties(id);
+
+                    await Task.WhenAll(classTask, ancestriesTask, propertiesTask);
+
+                    var classRes = await classTask;
+                    var xAncestries = await ancestriesTask;
+                    var xProperties = await propertiesTask;
+
+                    // Verificar si se encontró la clase
+                    if (!classRes.Any())
+                        throw new Exception("Class not found");
+
+                    // Poblar la entidad con los resultados obtenidos
+                    XClass xclass = classRes.First();
+                    xclass.XProperties = xProperties;
+                    xclass.XAncestries = xAncestries;
+
+                    return xclass;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<XClass?> GetWithRelations(int id)
         {
             try
             {
@@ -113,7 +156,7 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
         {
             try
             {
-                string sql = "update abstract.class set name = @name, isprimitive = @isprimitive where id = @id";
+                string sql = "update abstract.classes set name = @name, isprimitive = @isprimitive where id = @id";
 
                 var affectedRows = await _dbConnection.ExecuteAsync(sql, new
                 {
@@ -204,7 +247,7 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
                     sql,
                     map: (p, c) =>
                     {
-                        p.XClass = c;
+                        p.PropertyClass = c;
                         return p;
                     },
                     param: new

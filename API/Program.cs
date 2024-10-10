@@ -22,8 +22,8 @@ namespace API
                 return connection;
             });
 
-            builder.Services.AddSingleton<IXClassRepository, XClassRepository>();
-            builder.Services.AddSingleton<XClassService>();
+            builder.Services.AddScoped<IXClassRepository, XClassRepository>();
+            builder.Services.AddScoped<XClassService>();
 
             builder.Services.AddCors(options =>
             {

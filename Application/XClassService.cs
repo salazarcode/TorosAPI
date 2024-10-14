@@ -26,11 +26,14 @@ namespace Application
                 await Task.WhenAll(classTask, ancestriesTask, propertiesTask);
 
                 var classResult = classTask.Result;
-                if (classResult != null)
+
+                if (classResult is null)
                 {
-                    classResult.XAncestries = ancestriesTask.Result;
-                    classResult.XProperties = propertiesTask.Result;
+                    return null;
                 }
+
+                classResult.XAncestries = ancestriesTask.Result;
+                classResult.XProperties = propertiesTask.Result;
 
                 return classResult;
             }

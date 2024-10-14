@@ -26,7 +26,7 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
                 {
                     _dbConnection.Open();
 
-                    string sql = "INSERT INTO properties VALUES (@ClassID, @PropertyClassID, @Key, @Name, @Min, @Max);SELECT SCOPE_IDENTITY();";
+                    string sql = "INSERT INTO properties VALUES (@ClassID, @PropertyClassID, @Key, @Name);SELECT SCOPE_IDENTITY();";
 
                     var ids = await _dbConnection.QueryAsync<int>(sql, new
                     {

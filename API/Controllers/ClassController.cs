@@ -30,6 +30,7 @@ namespace API.Controllers
                 res = new ClassDetailRS();
                 res.ID = entity.ID;
                 res.Name = entity.Name;
+                res.Key = entity.Key;
                 res.Properties = entity.XProperties.Select(p => new PropertyDTO
                 {
                     ID = p.ID,

@@ -1,4 +1,4 @@
-﻿namespace Infrastructure
+﻿namespace Infra.DTOs
 {
     public class ConnectionStrings
     {

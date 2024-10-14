@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Domain.Interfaces;
 using Domain.Models;
+using Infra.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories.Dapper.MSSQL
+namespace Infra.Repositories.Dapper
 {
     public class XAncestryRepository : IXAncestryRepository
     {
@@ -77,7 +78,7 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
 
                     var res = await _dbConnection.QueryAsync<XAncestry>(query, new
                     {
-                        id = id
+                        id
                     });
 
                     return res.First();
@@ -124,8 +125,8 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
 
                     var ids = await _dbConnection.QueryAsync<int>(sql, new
                     {
-                        @ClassID = input.ClassID,
-                        @ParentID = input.ParentID
+                        input.ClassID,
+                        input.ParentID
                     });
 
                     return ids.First();
@@ -150,8 +151,8 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
 
                     var affectedRows = await _dbConnection.ExecuteAsync(sql, new
                     {
-                        ClassID = ClassID,
-                        ParentID = ParentID,
+                        ClassID,
+                        ParentID,
                         InputClassID = input.ClassID,
                         InputParentID = input.ParentID
                     });
@@ -177,8 +178,8 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
 
                     var affectedRows = await _dbConnection.ExecuteAsync(sql, new
                     {
-                        ClassID = ClassID,
-                        ParentID = ParentID
+                        ClassID,
+                        ParentID
                     });
 
                     return affectedRows != 0;

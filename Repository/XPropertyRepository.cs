@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Domain.Interfaces;
 using Domain.Models;
+using Infra.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Repositories.Dapper.MSSQL
+namespace Infra.Repositories.Dapper
 {
     public class XPropertyRepository : IXPropertyRepository
     {
@@ -33,9 +34,7 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
                         ClassID,
                         xproperty.PropertyClassID,
                         xproperty.Name,
-                        xproperty.Key,
-                        xproperty.Min,
-                        xproperty.Max
+                        xproperty.Key
                     });
 
                     return ids.First();
@@ -139,7 +138,7 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
 
                     var res = await _dbConnection.QueryAsync<XProperty>(query, new
                     {
-                        id = id
+                        id
                     });
 
                     return res.First();
@@ -187,9 +186,9 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
 
                     var ids = await _dbConnection.QueryAsync<int>(sql, new
                     {
-                        Name = input.Name,
-                        PropertyClassID = input.PropertyClassID,
-                        Key = input.Key,
+                        input.Name,
+                        input.PropertyClassID,
+                        input.Key,
                     });
 
                     return ids.First();
@@ -214,10 +213,10 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
 
                     var affectedRows = await _dbConnection.ExecuteAsync(sql, new
                     {
-                        ID = input.ID,
-                        Name = input.Name,
-                        PropertyClassID = input.PropertyClassID,
-                        Key = input.Key,
+                        input.ID,
+                        input.Name,
+                        input.PropertyClassID,
+                        input.Key,
                     });
 
                     return affectedRows != 0;

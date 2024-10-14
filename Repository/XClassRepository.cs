@@ -1,12 +1,13 @@
 ﻿using Dapper;
 using Domain.Interfaces;
 using Domain.Models;
+using Infra.DTOs;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using static Dapper.SqlMapper;
 
-namespace Infrastructure.Repositories.Dapper.MSSQL
+namespace Infra.Repositories.Dapper
 {
     public class XClassRepository : IXClassRepository
     {
@@ -49,7 +50,7 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
 
                     var res = await _dbConnection.QueryAsync<XClass>(query, new
                     {
-                        id = id
+                        id
                     });
 
                     return res.First();
@@ -76,7 +77,7 @@ namespace Infrastructure.Repositories.Dapper.MSSQL
                     {
                         input.Name,
                         IsPrimitive = input.IsPrimitive ? 1 : 0,
-                        Key = input.Key
+                        input.Key
                     });
 
                     return ids.First();

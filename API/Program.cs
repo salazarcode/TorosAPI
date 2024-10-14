@@ -6,9 +6,9 @@ using System.Security.Cryptography;
 using Microsoft.OpenApi.Models;
 using Application;
 using Domain.Interfaces;
-using Infrastructure.Repositories.Dapper.MSSQL;
 using Microsoft.Extensions.Configuration;
-using Infrastructure;
+using Infra.Repositories.Dapper;
+using Infra.DTOs;
 
 namespace API
 {

@@ -36,8 +36,6 @@ namespace API.Controllers
                     ID = p.ID,
                     Name = p.Name,
                     Key = p.Key,
-                    Min = p.Min,
-                    Max = p.Max,
                     ClassName = p.PropertyClass.Name
                 }).ToList();
                 res.Ancestries = entity.XAncestries.Select(a => new AncestryDTO
@@ -119,9 +117,7 @@ namespace API.Controllers
                 ClassID = c.ID,
                 PropertyClassID = input.PropertyClassID,
                 Name = input.Name,
-                Key = input.Key,
-                Min = input.Min,
-                Max = input.Max,
+                Key = input.Key
             };
 
             var newPropertyID = await _classService.AddProperty(c.ID, property);

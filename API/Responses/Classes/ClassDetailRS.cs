@@ -17,8 +17,6 @@ namespace API.Responses.Classes
         public int ID { get; set; }
         public string Name { get; set; } = "";
         public string Key { get; set; } = "";
-        public int Min { get; set; }
-        public int Max { get; set; }
         public string ClassName { get; set; }
     }
     public class AncestryDTO

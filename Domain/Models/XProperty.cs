@@ -11,6 +11,7 @@ namespace Domain.Models
         public int ID { get; set; }
         public int ClassID { get; set; }
         public int PropertyClassID { get; set; }
+        public string Key { get; set; } = "";
         public string Name { get; set; } = "";
         public int Min { get; set; }
         public int Max { get; set; }

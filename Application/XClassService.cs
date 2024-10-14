@@ -5,18 +5,34 @@ namespace Application
 {
     public class XClassService
     {
-        private readonly IXClassRepository repository;
-        public XClassService(IXClassRepository repo)
+        private readonly IXClassRepository _classRepository;
+        private readonly IXPropertyRepository _propertyRepository;
+        private readonly IXAncestryRepository _ancestryRepository;
+        public XClassService(IXClassRepository classRepository, IXPropertyRepository propertyRepository, IXAncestryRepository ancestryRepository)
         {
-            repository = repo;
+            _classRepository = classRepository;
+            _propertyRepository = propertyRepository;
+            _ancestryRepository = ancestryRepository;
         }
 
-        public async Task<XClass?> Get(int id, bool WithRelations = false)
+        public async Task<XClass?> Get(int ClassID)
         {
             try
             {
-                var entity = await repository.Get(id, WithRelations);
-                return entity;
+                var classTask = _classRepository.Get(ClassID);
+                var ancestriesTask = _ancestryRepository.GetAncestries(ClassID);
+                var propertiesTask = _propertyRepository.GetProperties(ClassID);
+
+                await Task.WhenAll(classTask, ancestriesTask, propertiesTask);
+
+                var classResult = classTask.Result;
+                if (classResult != null)
+                {
+                    classResult.XAncestries = ancestriesTask.Result;
+                    classResult.XProperties = propertiesTask.Result;
+                }
+
+                return classResult;
             }
             catch (Exception)
             {
@@ -24,11 +40,13 @@ namespace Application
             }
         }
 
+
+
         public async Task<List<XClass>> Get()
         {
             try
             {
-                var list = await repository.Get();
+                var list = await _classRepository.Get();
                 return list;
             }
             catch (Exception)
@@ -41,7 +59,7 @@ namespace Application
         {
             try
             {
-                var res = await repository.Create(input);
+                var res = await _classRepository.Create(input);
                 return res;
             }
             catch (Exception)
@@ -54,7 +72,7 @@ namespace Application
         {
             try
             {
-                var res = await repository.Update(input);
+                var res = await _classRepository.Update(input);
                 return res;
             }
             catch (Exception)
@@ -67,7 +85,7 @@ namespace Application
         {
             try
             {
-                var res = await repository.AddProperty(ClassID, property);
+                var res = await _propertyRepository.AddProperty(ClassID, property);
                 return res;
             }
             catch (Exception)
@@ -80,7 +98,7 @@ namespace Application
         {
             try
             {
-                var res = await repository.RemoveProperty(PropertyID);
+                var res = await _propertyRepository.RemoveProperty(PropertyID);
                 return res;
             }
             catch (Exception)
@@ -93,7 +111,7 @@ namespace Application
         {
             try
             {
-                var res = await repository.Delete(id);
+                var res = await _classRepository.Delete(id);
                 return res;
             }
             catch (Exception)

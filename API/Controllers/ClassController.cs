@@ -21,7 +21,8 @@ namespace API.Controllers
         [Route("{id}")]
         public async Task<IActionResult?> Get([FromRoute] int id)
         {
-            var entity = await _classService.Get(id, true);
+            var entity = await _classService.Get(id);
+
             ClassDetailRS? res = null;
 
             if (entity is not null)
@@ -33,12 +34,14 @@ namespace API.Controllers
                 {
                     ID = p.ID,
                     Name = p.Name,
+                    Key = p.Key,
                     Min = p.Min,
                     Max = p.Max,
                     ClassName = p.PropertyClass.Name
                 }).ToList();
                 res.Ancestries = entity.XAncestries.Select(a => new AncestryDTO
                 {
+                    Key = a.Parent.Key,
                     Name = a.Parent.Name,
                     IsPrimitive = a.Parent.IsPrimitive,
                 }).ToList();
@@ -57,6 +60,7 @@ namespace API.Controllers
                 return new ClassRS
                 {
                     ID = x.ID,
+                    Key = x.Key,
                     Name = x.Name,
                     IsPrimitive = x.IsPrimitive
                 };
@@ -91,7 +95,8 @@ namespace API.Controllers
             {
                 ID = id,
                 Name = input.Name,
-                IsPrimitive = input.IsPrimitive
+                IsPrimitive = input.IsPrimitive,
+                Key = input.Key                
             };
 
             var res = await _classService.Update(updateClass);
@@ -113,6 +118,7 @@ namespace API.Controllers
                 ClassID = c.ID,
                 PropertyClassID = input.PropertyClassID,
                 Name = input.Name,
+                Key = input.Key,
                 Min = input.Min,
                 Max = input.Max,
             };
@@ -121,7 +127,7 @@ namespace API.Controllers
 
             property.ID = newPropertyID;
 
-            var res = await _classService.Get(c.ID, true);
+            var res = await _classService.Get(c.ID);
 
             return Ok(res);
         }
@@ -130,7 +136,7 @@ namespace API.Controllers
         [Route("{ClassID}/property/{PropertyID}")]
         public async Task<IActionResult> RemoveProperty([FromRoute] int ClassID, [FromRoute] int PropertyID)
         {
-            var c = await _classService.Get(ClassID, true);
+            var c = await _classService.Get(ClassID);
             if (c is null)
                 return NotFound();
 

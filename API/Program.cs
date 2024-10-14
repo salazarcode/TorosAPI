@@ -7,6 +7,8 @@ using Microsoft.OpenApi.Models;
 using Application;
 using Domain.Interfaces;
 using Infrastructure.Repositories.Dapper.MSSQL;
+using Microsoft.Extensions.Configuration;
+using Infrastructure;
 
 namespace API
 {
@@ -16,13 +18,14 @@ namespace API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddScoped<IDbConnection>(sp => {
-                var cnnStr = builder.Configuration.GetConnectionString("DefaultConnection");
-                var connection = new SqlConnection(cnnStr);
-                return connection;
+            builder.Services.AddSingleton<ConnectionStrings>(new ConnectionStrings
+            {
+                DevLocal = builder.Configuration.GetConnectionString("DevLocal")
             });
 
             builder.Services.AddScoped<IXClassRepository, XClassRepository>();
+            builder.Services.AddScoped<IXAncestryRepository, XAncestryRepository>();
+            builder.Services.AddScoped<IXPropertyRepository, XPropertyRepository>();
             builder.Services.AddScoped<XClassService>();
 
             builder.Services.AddCors(options =>

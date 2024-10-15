@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-namespace API.Responses.Classes
+﻿namespace Infra.DTOs.Responses.Classes
 {
     public class ClassRS
     {

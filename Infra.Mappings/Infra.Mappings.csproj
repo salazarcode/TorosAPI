@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\DTOs\Infra.DTOs.csproj" />
+	<ProjectReference Include="..\DTOs\Infra.DTOs.csproj" />
     <ProjectReference Include="..\Repositories.EF\Infra.Repositories.EF.csproj" />
   </ItemGroup>
 

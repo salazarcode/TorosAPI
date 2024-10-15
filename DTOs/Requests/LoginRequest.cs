@@ -1,4 +1,4 @@
-﻿namespace API.Requests
+﻿namespace Infra.DTOs.Requests
 {
     public class LoginRequest
     {

@@ -1,7 +1,8 @@
-﻿using API.Requests.Classes;
-using API.Responses.Classes;
-using Application;
+﻿using Application;
+using AutoMapper;
 using Domain.Models;
+using Infra.DTOs.Requests.Classes;
+using Infra.DTOs.Responses.Classes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -11,34 +12,12 @@ namespace API.Controllers
     public class ClassController : ControllerBase
     {
         private readonly XClassService _classService;
+        private readonly IMapper _mapper;
 
-        public ClassController(XClassService classService)
+        public ClassController(XClassService classService, IMapper mapper)
         {
             _classService = classService;
-        }
-
-        private ClassDetailRS GetMappedClass(XClass entity) {
-            ClassDetailRS res = new ClassDetailRS();
-
-            res = new ClassDetailRS();
-            res.ID = entity.Id;
-            res.Name = entity.Name ?? "";
-            res.Key = entity.Key;
-            res.Properties = entity.PropertyClasses.Select(p => new PropertyDTO
-            {
-                ID = p.Id,
-                Name = p.Name ?? "",
-                Key = p.Key,
-                ClassName = p.PropertyClass?.Name ?? ""
-            }).ToList();
-            res.Ancestries = entity.Parents.Select(a => new AncestryDTO
-            {
-                Key = a.Key,
-                Name = a.Name ?? "",
-                IsPrimitive = a.IsPrimitive,
-            }).ToList();
-
-            return res;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -46,12 +25,11 @@ namespace API.Controllers
         public async Task<IActionResult?> Get([FromRoute] int id)
         {
             var entity = await _classService.Get(id);
-
-            ClassDetailRS? res = null;
+            var res = new ClassDetailRS();
 
             if (entity is not null)
             {
-                res = GetMappedClass(entity);
+                res = _mapper.Map<ClassDetailRS>(entity);
             }
 
             return entity is null ? NotFound() : Ok(res);
@@ -133,7 +111,7 @@ namespace API.Controllers
             property.Id = newPropertyID;
 
             var res = await _classService.Get(c.Id);
-            var x = GetMappedClass(res);
+            var x = _mapper.Map<ClassDetailRS>(res);
             return Ok(x);
         }
 

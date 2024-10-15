@@ -1,4 +1,4 @@
-﻿namespace API.Responses
+﻿namespace Infra.DTOs.Responses
 {
     public class AuthResponse
     {

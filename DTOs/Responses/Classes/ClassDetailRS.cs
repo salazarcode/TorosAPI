@@ -1,6 +1,4 @@
-﻿using Domain.Models;
-
-namespace API.Responses.Classes
+﻿namespace Infra.DTOs.Responses.Classes
 {
     public class ClassDetailRS
     {
@@ -8,7 +6,7 @@ namespace API.Responses.Classes
         public string Key { get; set; } = "";
         public string Name { get; set; } = "";
         public List<PropertyDTO> Properties { get; set; } = new();
-        public List<AncestryDTO> Ancestries { get; set; } = new();
+        public List<ParentDTO> Parents { get; set; } = new();
 
     }
 
@@ -17,9 +15,9 @@ namespace API.Responses.Classes
         public int ID { get; set; }
         public string Name { get; set; } = "";
         public string Key { get; set; } = "";
-        public string ClassName { get; set; }
+        public string ClassKey { get; set; } = "";
     }
-    public class AncestryDTO
+    public class ParentDTO
     {
         public string Key { get; set; } = "";
         public string Name { get; set; } = "";

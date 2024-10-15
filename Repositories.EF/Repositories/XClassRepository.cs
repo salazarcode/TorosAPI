@@ -31,7 +31,9 @@ namespace Infra.Repositories.EF.Repositories
             var c = await _dbSet.Where(x => x.Id == id)
                                 .Include(y => y.Parents)
                                 .Include(z => z.PropertyClasses)
+                                    .ThenInclude(pd => pd.PropertyClass)
                                 .Include(w => w.Classes).FirstOrDefaultAsync();
+
             return _mapper.Map<XClass>(c);
         }
 

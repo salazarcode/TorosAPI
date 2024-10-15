@@ -1,4 +1,4 @@
-﻿namespace API.Requests.Classes
+﻿namespace Infra.DTOs.Requests.Classes
 {
     public class AddPropertyRQ
     {

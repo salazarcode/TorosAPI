@@ -63,7 +63,7 @@ namespace Infra.Repositories.Dapper
             }
         }
 
-        public async Task<int> Create(XClass input)
+        public async Task<XClass> Create(XClass input)
         {
             try
             {
@@ -80,7 +80,9 @@ namespace Infra.Repositories.Dapper
                         input.Key
                     });
 
-                    return ids.First();
+                    input.ID = ids.First();
+
+                    return input;
                 }
             }
             catch (Exception)
@@ -90,7 +92,7 @@ namespace Infra.Repositories.Dapper
 
         }
 
-        public async Task<bool> Delete(int ID)
+        public async Task Delete(int ID)
         {
             try
             {
@@ -100,12 +102,10 @@ namespace Infra.Repositories.Dapper
 
                     string sql = "delete from classes where ID = @id";
 
-                    var affectedRows = await _dbConnection.ExecuteAsync(sql, new
+                    await _dbConnection.ExecuteAsync(sql, new
                     {
                         id = ID
                     });
-
-                    return affectedRows != 0;
                 }
             }
             catch (Exception)
@@ -115,7 +115,7 @@ namespace Infra.Repositories.Dapper
         }
 
 
-        public async Task<bool> Update(XClass input)
+        public async Task<XClass> Update(XClass input)
         {
             try
             {
@@ -133,7 +133,7 @@ namespace Infra.Repositories.Dapper
                         key = input.Key,
                     });
 
-                    return affectedRows != 0;
+                    return input;
                 }
             }
             catch (Exception)

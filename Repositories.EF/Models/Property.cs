@@ -15,11 +15,11 @@ public partial class Property
 
     public string? Name { get; set; }
 
+    public virtual AbstractPropertyDetail? AbstractPropertyDetail { get; set; }
+
     public virtual Class Class { get; set; } = null!;
 
     public virtual Class PropertyClass { get; set; } = null!;
-
-    public virtual RelationDetail? RelationDetail { get; set; }
 
     public virtual ICollection<StringValue> StringValues { get; set; } = new List<StringValue>();
 }

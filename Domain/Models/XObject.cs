@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Models;
+
+public class XObject
 {
-    public class XObject
-    {
-        public int ID { get; set; }
-        public int ClassID { get; set; }
-        public List<XProperty> Values { get; set; } = new();
-        public XClass? XClass { get; set; }
+    public int Id { get; set; }
 
-    }
+    public int ClassId { get; set; }
+
+    public DateTime? CreatedAt { get; set; }
+
+    public virtual XClass Class { get; set; } = null!;
+
+    public virtual ICollection<XStringValue> StringValues { get; set; } = new List<XStringValue>();
 }

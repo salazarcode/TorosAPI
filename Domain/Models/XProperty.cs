@@ -1,21 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace Domain.Models;
+
+public class XProperty
 {
-    public class XProperty
-    {
-        public int ID { get; set; }
-        public int ClassID { get; set; }
-        public int PropertyClassID { get; set; }
-        public int? RelationDetailID { get; set; }
-        public string Key { get; set; } = "";
-        public string Name { get; set; } = "";
-        public XClass? XClass { get; set; }
-        public XClass? PropertyClass { get; set; }
-        public RelationDetail? RelationDetail { get; set; }
-    }
+    public int Id { get; set; }
+
+    public int ClassId { get; set; }
+
+    public int PropertyClassId { get; set; }
+
+    public string Key { get; set; } = null!;
+
+    public string? Name { get; set; }
+
+    public virtual XAbstractPropertyDetail? AbstractPropertyDetail { get; set; }
+
+    public virtual XClass Class { get; set; } = null!;
+
+    public virtual XClass PropertyClass { get; set; } = null!;
+
+    public virtual ICollection<XStringValue> StringValues { get; set; } = new List<XStringValue>();
 }

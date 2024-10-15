@@ -6,8 +6,8 @@ namespace Domain.Interfaces
     {
         Task<TEntity?> Get(int id);
         Task<List<TEntity>> Get();
-        Task<int> Create(TEntity input);
-        Task<bool> Update(TEntity input);
-        Task<bool> Delete(int ID);
+        Task<TEntity?> Create(TEntity input);
+        Task<TEntity?> Update(TEntity input);
+        Task Delete(int ID);
     }
 }

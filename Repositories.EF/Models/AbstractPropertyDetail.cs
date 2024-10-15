@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Infra.Repositories.EF.Models;
 
-public partial class RelationDetail
+public partial class AbstractPropertyDetail
 {
     public int PropertyId { get; set; }
 
@@ -11,9 +11,9 @@ public partial class RelationDetail
 
     public int? Max { get; set; }
 
-    public string? OnDelete { get; set; }
+    public string? DeleteBehaviour { get; set; }
 
-    public virtual DeletionType? OnDeleteNavigation { get; set; }
+    public virtual DeleteBehaviour? DeleteBehaviourNavigation { get; set; }
 
     public virtual Property Property { get; set; } = null!;
 }

@@ -15,15 +15,15 @@ public partial class EavContext : DbContext
     {
     }
 
+    public virtual DbSet<AbstractPropertyDetail> AbstractPropertyDetails { get; set; }
+
     public virtual DbSet<Class> Classes { get; set; }
 
-    public virtual DbSet<DeletionType> DeletionTypes { get; set; }
+    public virtual DbSet<DeleteBehaviour> DeleteBehaviours { get; set; }
 
     public virtual DbSet<Object> Objects { get; set; }
 
     public virtual DbSet<Property> Properties { get; set; }
-
-    public virtual DbSet<RelationDetail> RelationDetails { get; set; }
 
     public virtual DbSet<StringValue> StringValues { get; set; }
 
@@ -33,6 +33,24 @@ public partial class EavContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<AbstractPropertyDetail>(entity =>
+        {
+            entity.HasKey(e => e.PropertyId).HasName("PK__Relation__70C9A755AD2F208E");
+
+            entity.Property(e => e.PropertyId)
+                .ValueGeneratedNever()
+                .HasColumnName("PropertyID");
+            entity.Property(e => e.DeleteBehaviour).HasMaxLength(20);
+
+            entity.HasOne(d => d.DeleteBehaviourNavigation).WithMany(p => p.AbstractPropertyDetails)
+                .HasForeignKey(d => d.DeleteBehaviour)
+                .HasConstraintName("FK__RelationD__OnDel__0539C240");
+
+            entity.HasOne(d => d.Property).WithOne(p => p.AbstractPropertyDetail)
+                .HasForeignKey<AbstractPropertyDetail>(d => d.PropertyId)
+                .HasConstraintName("FK__RelationD__OnDel__04459E07");
+        });
+
         modelBuilder.Entity<Class>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Types__3214EC27154A2D2D");
@@ -80,7 +98,7 @@ public partial class EavContext : DbContext
                     });
         });
 
-        modelBuilder.Entity<DeletionType>(entity =>
+        modelBuilder.Entity<DeleteBehaviour>(entity =>
         {
             entity.HasKey(e => e.Name).HasName("PK__Deletion__737584F761214E1A");
 
@@ -122,24 +140,6 @@ public partial class EavContext : DbContext
                 .HasForeignKey(d => d.PropertyClassId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Relations__Desti__02925FBF");
-        });
-
-        modelBuilder.Entity<RelationDetail>(entity =>
-        {
-            entity.HasKey(e => e.PropertyId).HasName("PK__Relation__70C9A755AD2F208E");
-
-            entity.Property(e => e.PropertyId)
-                .ValueGeneratedNever()
-                .HasColumnName("PropertyID");
-            entity.Property(e => e.OnDelete).HasMaxLength(20);
-
-            entity.HasOne(d => d.OnDeleteNavigation).WithMany(p => p.RelationDetails)
-                .HasForeignKey(d => d.OnDelete)
-                .HasConstraintName("FK__RelationD__OnDel__0539C240");
-
-            entity.HasOne(d => d.Property).WithOne(p => p.RelationDetail)
-                .HasForeignKey<RelationDetail>(d => d.PropertyId)
-                .HasConstraintName("FK__RelationD__OnDel__04459E07");
         });
 
         modelBuilder.Entity<StringValue>(entity =>

@@ -9,8 +9,8 @@ namespace Domain.Interfaces
 {
     public interface IXPropertyRepository : IRepository<XProperty>
     {
-        Task<int> AddProperty(int ClassID, XProperty xproperty);
-        Task<bool> RemoveProperty(int PropertyID);
-        Task<List<XProperty>> GetProperties(int ClassID);
+        public Task<List<XProperty>> GetFromClassID(int ClassID);
+        Task<int> AddProperty(XProperty property);
+        Task<bool> RemoveProperty(XProperty propert);
     }
 }

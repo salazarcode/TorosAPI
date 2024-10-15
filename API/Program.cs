@@ -6,9 +6,10 @@ using System.Security.Cryptography;
 using Microsoft.OpenApi.Models;
 using Application;
 using Domain.Interfaces;
-using Microsoft.Extensions.Configuration;
-using Infra.Repositories.Dapper;
-using Infra.DTOs;
+using Infra.Repositories.EF.Models;
+using Infra.Repositories.EF.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Infra.Mappings;
 
 namespace API
 {
@@ -18,15 +19,22 @@ namespace API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddSingleton<ConnectionStrings>(new ConnectionStrings
-            {
-                DevLocal = builder.Configuration.GetConnectionString("DevLocal")
+            //builder.Services.AddSingleton<ConnectionStrings>(new ConnectionStrings
+            //{
+            //    DevLocal = builder.Configuration.GetConnectionString("DevLocal")
+            //});
+
+            builder.Services.AddDbContext<EavContext>(options => {
+                var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
+                options.UseSqlServer(connStr);
             });
 
-            builder.Services.AddScoped<IXClassRepository, XClassRepository>();
-            builder.Services.AddScoped<IXAncestryRepository, XAncestryRepository>();
-            builder.Services.AddScoped<IXPropertyRepository, XPropertyRepository>();
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
+
             builder.Services.AddScoped<XClassService>();
+
+            builder.Services.AddScoped<IXClassRepository, XClassRepository>();
+            builder.Services.AddScoped<IXPropertyRepository, XPropertyRepository>();
 
             builder.Services.AddCors(options =>
             {

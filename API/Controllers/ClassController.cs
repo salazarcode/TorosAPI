@@ -17,6 +17,30 @@ namespace API.Controllers
             _classService = classService;
         }
 
+        private ClassDetailRS GetMappedClass(XClass entity) {
+            ClassDetailRS res = new ClassDetailRS();
+
+            res = new ClassDetailRS();
+            res.ID = entity.Id;
+            res.Name = entity.Name ?? "";
+            res.Key = entity.Key;
+            res.Properties = entity.PropertyClasses.Select(p => new PropertyDTO
+            {
+                ID = p.Id,
+                Name = p.Name ?? "",
+                Key = p.Key,
+                ClassName = p.PropertyClass?.Name ?? ""
+            }).ToList();
+            res.Ancestries = entity.Parents.Select(a => new AncestryDTO
+            {
+                Key = a.Key,
+                Name = a.Name ?? "",
+                IsPrimitive = a.IsPrimitive,
+            }).ToList();
+
+            return res;
+        }
+
         [HttpGet]
         [Route("{id}")]
         public async Task<IActionResult?> Get([FromRoute] int id)
@@ -27,23 +51,7 @@ namespace API.Controllers
 
             if (entity is not null)
             {
-                res = new ClassDetailRS();
-                res.ID = entity.ID;
-                res.Name = entity.Name;
-                res.Key = entity.Key;
-                res.Properties = entity.XProperties.Select(p => new PropertyDTO
-                {
-                    ID = p.ID,
-                    Name = p.Name,
-                    Key = p.Key,
-                    ClassName = p.PropertyClass.Name
-                }).ToList();
-                res.Ancestries = entity.XAncestries.Select(a => new AncestryDTO
-                {
-                    Key = a.Parent.Key,
-                    Name = a.Parent.Name,
-                    IsPrimitive = a.Parent.IsPrimitive,
-                }).ToList();
+                res = GetMappedClass(entity);
             }
 
             return entity is null ? NotFound() : Ok(res);
@@ -58,7 +66,7 @@ namespace API.Controllers
             {
                 return new ClassRS
                 {
-                    ID = x.ID,
+                    ID = x.Id,
                     Key = x.Key,
                     Name = x.Name,
                     IsPrimitive = x.IsPrimitive
@@ -92,7 +100,7 @@ namespace API.Controllers
 
             var updateClass = new XClass
             {
-                ID = id,
+                Id = id,
                 Name = input.Name,
                 IsPrimitive = input.IsPrimitive,
                 Key = input.Key                
@@ -114,19 +122,19 @@ namespace API.Controllers
 
             var property = new XProperty
             {
-                ClassID = c.ID,
-                PropertyClassID = input.PropertyClassID,
+                ClassId = c.Id,
+                PropertyClassId = input.PropertyClassID,
                 Name = input.Name,
                 Key = input.Key
             };
 
-            var newPropertyID = await _classService.AddProperty(c.ID, property);
+            var newPropertyID = await _classService.AddProperty(c.Id, property);
 
-            property.ID = newPropertyID;
+            property.Id = newPropertyID;
 
-            var res = await _classService.Get(c.ID);
-
-            return Ok(res);
+            var res = await _classService.Get(c.Id);
+            var x = GetMappedClass(res);
+            return Ok(x);
         }
 
         [HttpDelete]
@@ -137,12 +145,12 @@ namespace API.Controllers
             if (c is null)
                 return NotFound();
 
-            var property = c.XProperties.FirstOrDefault(x => x.ID == PropertyID);
+            var property = c.PropertyClasses.FirstOrDefault(x => x.Id == PropertyID);
 
             if (property is null)
                 return NotFound();
 
-            var deleted = await _classService.RemoveProperty(property.ID);
+            var deleted = await _classService.RemoveProperty(property.Id);
 
             return Ok();
         }
@@ -151,9 +159,9 @@ namespace API.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var res = await _classService.Delete(id);
+            await _classService.Delete(id);
 
-            return Ok(res);
+            return Ok();
         }
     }
 }

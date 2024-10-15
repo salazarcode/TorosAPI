@@ -7,35 +7,18 @@ namespace Application
     {
         private readonly IXClassRepository _classRepository;
         private readonly IXPropertyRepository _propertyRepository;
-        private readonly IXAncestryRepository _ancestryRepository;
-        public XClassService(IXClassRepository classRepository, IXPropertyRepository propertyRepository, IXAncestryRepository ancestryRepository)
+        public XClassService(IXClassRepository classRepository, IXPropertyRepository propertyRepository)
         {
             _classRepository = classRepository;
             _propertyRepository = propertyRepository;
-            _ancestryRepository = ancestryRepository;
         }
 
         public async Task<XClass?> Get(int ClassID)
         {
             try
             {
-                var classTask = _classRepository.Get(ClassID);
-                var ancestriesTask = _ancestryRepository.GetAncestries(ClassID);
-                var propertiesTask = _propertyRepository.GetProperties(ClassID);
-
-                await Task.WhenAll(classTask, ancestriesTask, propertiesTask);
-
-                var classResult = classTask.Result;
-
-                if (classResult is null)
-                {
-                    return null;
-                }
-
-                classResult.XAncestries = ancestriesTask.Result;
-                classResult.XProperties = propertiesTask.Result;
-
-                return classResult;
+                var res = await _classRepository.Get(ClassID);
+                return res;
             }
             catch (Exception)
             {
@@ -63,7 +46,7 @@ namespace Application
             try
             {
                 var res = await _classRepository.Create(input);
-                return res;
+                return res.Id;
             }
             catch (Exception)
             {
@@ -76,7 +59,7 @@ namespace Application
             try
             {
                 var res = await _classRepository.Update(input);
-                return res;
+                return res is not null;
             }
             catch (Exception)
             {
@@ -88,7 +71,8 @@ namespace Application
         {
             try
             {
-                var res = await _propertyRepository.AddProperty(ClassID, property);
+                property.ClassId = ClassID;
+                var res = await _propertyRepository.AddProperty(property);
                 return res;
             }
             catch (Exception)
@@ -101,7 +85,12 @@ namespace Application
         {
             try
             {
-                var res = await _propertyRepository.RemoveProperty(PropertyID);
+                var p = await _propertyRepository.Get(PropertyID);
+
+                if (p is null)
+                    return false;
+
+                var res = await _propertyRepository.RemoveProperty(p);
                 return res;
             }
             catch (Exception)
@@ -110,12 +99,11 @@ namespace Application
             }
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task Delete(int id)
         {
             try
             {
-                var res = await _classRepository.Delete(id);
-                return res;
+                await _classRepository.Delete(id);
             }
             catch (Exception)
             {

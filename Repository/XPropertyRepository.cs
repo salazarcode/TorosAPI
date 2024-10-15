@@ -174,7 +174,7 @@ namespace Infra.Repositories.Dapper
             }
         }
 
-        public async Task<int> Create(XProperty input)
+        public async Task<XProperty> Create(XProperty input)
         {
             try
             {
@@ -191,7 +191,9 @@ namespace Infra.Repositories.Dapper
                         input.Key,
                     });
 
-                    return ids.First();
+                    input.ID = ids.First();
+
+                    return input;
                 }
 
             }
@@ -201,7 +203,7 @@ namespace Infra.Repositories.Dapper
             }
         }
 
-        public async Task<bool> Update(XProperty input)
+        public async Task<XProperty> Update(XProperty input)
         {
             try
             {
@@ -219,7 +221,7 @@ namespace Infra.Repositories.Dapper
                         input.Key,
                     });
 
-                    return affectedRows != 0;
+                    return input;
                 }
 
             }
@@ -229,7 +231,7 @@ namespace Infra.Repositories.Dapper
             }
         }
 
-        public async Task<bool> Delete(int ID)
+        public async Task Delete(int ID)
         {
             try
             {
@@ -243,8 +245,6 @@ namespace Infra.Repositories.Dapper
                     {
                         id = ID
                     });
-
-                    return affectedRows != 0;
                 }
             }
             catch (Exception)

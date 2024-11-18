@@ -22,7 +22,7 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Hello()
         {
-            return Ok("TorosAPI");
+            return Ok("Despleagdo adecuadamente con GithubActions.");
         }
 
 

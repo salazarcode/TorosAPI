@@ -45,7 +45,7 @@ namespace API.Controllers
             var issuer = _configuration["Jwt:Issuer"];
 
             var rsa = new RSACryptoServiceProvider();
-            rsa.ImportFromPem(System.IO.File.ReadAllText("private.key"));
+            rsa.ImportFromPem(System.IO.File.ReadAllText("keys/private.key"));
             var signingCredentials = new SigningCredentials(new RsaSecurityKey(rsa), SecurityAlgorithms.RsaSha256);
 
             //var encodedKey = Encoding.UTF8.GetBytes(key);

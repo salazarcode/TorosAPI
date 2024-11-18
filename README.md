@@ -1,5 +1,7 @@
-Este proyecto aspira a convertirse en un BPMS, sigue una arquitectura monolítica y en capas.
+# Cryptographic Keys
 
-En su capa de presentación tiene el API: mi api define requests con validaciones hechas con FluentValidations y requests, que definen lo único que verá el usuario. - Requests - FluentValidation - Responses - AutoMapper
+This directory stores the RSA key pair used for JWT signing:
+- private.key - Private key for signing tokens
+- public.key - Public key for token verification
 
-En mi capa de dominio
+These files are not included in the repository for security reasons and must be generated locally.

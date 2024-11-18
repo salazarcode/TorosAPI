@@ -13,7 +13,6 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v3
 
-      # Configuración del agente SSH para conexión segura
       - name: Configurar SSH
         uses: webfactory/ssh-agent@v0.5.4
         with:
@@ -23,17 +22,28 @@ jobs:
         run: |
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-      # Copiar archivos necesarios al servidor
-      - name: Copiar archivos de proyecto
+      # Asegurarnos de que el Dockerfile se copia y tiene los permisos correctos
+      - name: Preparar y copiar archivos
         run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'mkdir -p /var/www/toros-api.salazarcode.net'
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
+            mkdir -p /var/www/toros-api.salazarcode.net
+            chmod 755 /var/www/toros-api.salazarcode.net
+          '
           rsync -avz --delete ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/toros-api.salazarcode.net/
 
-      # Construir y desplegar Docker
+          # Verificar que el Dockerfile existe y tiene permisos correctos
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
+            cd /var/www/toros-api.salazarcode.net &&
+            ls -la Dockerfile &&
+            chmod 644 Dockerfile
+          '
+
       - name: Build y Deploy Docker
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
             cd /var/www/toros-api.salazarcode.net &&
+            pwd &&
+            ls -la &&
             docker build -t toros-api . &&
             docker stop toros-api || true &&
             docker rm toros-api || true &&
@@ -42,11 +52,7 @@ jobs:
               --network eventmanager_network \
               -p 5000:80 \
               -e ASPNETCORE_ENVIRONMENT=Production \
+              -e ASPNETCORE_URLS="http://+:80" \
               --restart always \
               toros-api
           '
-
-      # Limpiar imágenes antiguas (opcional)
-      - name: Limpiar imágenes antiguas
-        run: |
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'docker system prune -f'

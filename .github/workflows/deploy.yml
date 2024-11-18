@@ -22,7 +22,6 @@ jobs:
         run: |
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
 
-      # Asegurarnos de que el Dockerfile se copia y tiene los permisos correctos
       - name: Preparar y copiar archivos
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
@@ -31,17 +30,10 @@ jobs:
           '
           rsync -avz --delete ./ ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/var/www/toros-api.salazarcode.net/
 
-          # Verificar que el Dockerfile existe y tiene permisos correctos
-          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
-            cd /var/www/toros-api.salazarcode.net &&
-            ls -la Dockerfile &&
-            chmod 644 Dockerfile
-          '
-
       - name: Build y Deploy Docker
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
-            cd /var/www/toros-api.salazarcode.net &&
+            cd /var/www/toros-api.salazarcode.net/API &&
             pwd &&
             ls -la &&
             docker build -t toros-api . &&
@@ -56,3 +48,7 @@ jobs:
               --restart always \
               toros-api
           '
+
+      - name: Limpiar imágenes antiguas
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} 'docker system prune -f'

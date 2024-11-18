@@ -19,6 +19,13 @@ namespace API.Controllers
             _configuration = configuration;
         }
 
+        [HttpGet]
+        public IActionResult Hello()
+        {
+            return Ok("TorosAPI");
+        }
+
+
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginRequest request)
         {
@@ -54,7 +61,7 @@ namespace API.Controllers
                 Subject = new ClaimsIdentity(new[] {
                     new Claim("sub", username)
                 }),
-                Expires = expiration                
+                Expires = expiration
             });
 
             return tokenHandler.WriteToken(token);

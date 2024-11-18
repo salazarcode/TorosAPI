@@ -27,6 +27,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infra.Repository.EF.UnitTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infra.Mappings", "Infra.Mappings\Infra.Mappings.csproj", "{1E140013-A369-41C2-BD75-9B4260492D6E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. SCRIPTS", "5. SCRIPTS", "{8D077CA9-EC4D-4756-9692-B3B822FB7B1F}"
+	ProjectSection(SolutionItems) = preProject
+		DatabaseGeneration.sql = DatabaseGeneration.sql
+		DemoData.sql = DemoData.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

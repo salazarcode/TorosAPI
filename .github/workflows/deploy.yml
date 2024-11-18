@@ -32,11 +32,13 @@ jobs:
 
       - name: Build y Deploy Docker
         run: |
+      - name: Build y Deploy Docker
+        run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} '
-            cd /var/www/toros-api.salazarcode.net/API &&
+            cd /var/www/toros-api.salazarcode.net &&
             pwd &&
             ls -la &&
-            docker build -t toros-api . &&
+            docker build -t toros-api -f API/Dockerfile . &&
             docker stop toros-api || true &&
             docker rm toros-api || true &&
             docker run -d \

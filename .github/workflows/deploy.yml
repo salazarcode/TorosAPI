@@ -1,17 +1,21 @@
 name: Build and Deploy API
-
 on:
   push:
     branches:
       - master
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
+        
+      - name: Generar llaves RSA
+        run: |
+          mkdir -p API/Keys
+          openssl genpkey -algorithm RSA -out API/Keys/private.key -pkeyopt rsa_keygen_bits:2048
+          openssl rsa -pubout -in API/Keys/private.key -out API/Keys/public.key
+          echo "${{ secrets.GITKEEPRSA }}" > API/Keys/.gitkeep
 
       - name: Configurar SSH
         uses: webfactory/ssh-agent@v0.5.4

@@ -16,6 +16,9 @@ jobs:
           openssl genpkey -algorithm RSA -out API/Keys/private.key -pkeyopt rsa_keygen_bits:2048
           openssl rsa -pubout -in API/Keys/private.key -out API/Keys/public.key
           echo "${{ secrets.GITKEEPRSA }}" > API/Keys/.gitkeep
+          chmod 600 API/Keys/private.key
+          chmod 644 API/Keys/public.key
+          chmod 644 API/Keys/.gitkeep
 
       - name: Configurar SSH
         uses: webfactory/ssh-agent@v0.5.4
@@ -48,7 +51,10 @@ jobs:
               -e ASPNETCORE_ENVIRONMENT=Production \
               -e ASPNETCORE_URLS="http://+:80" \
               --restart always \
-              toros-api
+              toros-api &&
+            echo "Esperando que el contenedor se inicie..." &&
+            sleep 10 &&
+            docker logs toros-api
           '
 
       - name: Limpiar imágenes antiguas

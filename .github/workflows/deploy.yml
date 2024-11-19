@@ -9,16 +9,19 @@ jobs:
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
-        
+
       - name: Generar llaves RSA
         run: |
+          # Crear el directorio con la estructura exacta
           mkdir -p API/Keys
+          # Generar las llaves
           openssl genpkey -algorithm RSA -out API/Keys/private.key -pkeyopt rsa_keygen_bits:2048
           openssl rsa -pubout -in API/Keys/private.key -out API/Keys/public.key
-          echo "${{ secrets.GITKEEPRSA }}" > API/Keys/.gitkeep
+          # Establecer permisos correctos
           chmod 600 API/Keys/private.key
           chmod 644 API/Keys/public.key
-          chmod 644 API/Keys/.gitkeep
+          # Verificar la creación
+          ls -la API/Keys/
 
       - name: Configurar SSH
         uses: webfactory/ssh-agent@v0.5.4
@@ -51,10 +54,7 @@ jobs:
               -e ASPNETCORE_ENVIRONMENT=Production \
               -e ASPNETCORE_URLS="http://+:80" \
               --restart always \
-              toros-api &&
-            echo "Esperando que el contenedor se inicie..." &&
-            sleep 10 &&
-            docker logs toros-api
+              toros-api
           '
 
       - name: Limpiar imágenes antiguas

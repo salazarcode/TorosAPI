@@ -53,7 +53,7 @@ namespace API
             var audience = jwtSettings["Audience"];
 
             var rsa = new RSACryptoServiceProvider();
-            rsa.ImportFromPem(File.ReadAllText("keys/public.key"));
+            rsa.ImportFromPem(File.ReadAllText("Keys/public.key"));
 
             builder.Services
                 .AddAuthentication(options =>

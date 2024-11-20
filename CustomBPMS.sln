@@ -39,7 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		.github\workflows\deploy.yml = .github\workflows\deploy.yml
 		Dockerfile = Dockerfile
-		README.md = README.md
+		..\..\..\Downloads\technical-justification.md = ..\..\..\Downloads\technical-justification.md
+		..\..\..\Downloads\README.md = ..\..\..\Downloads\README.md
 	EndProjectSection
 EndProject
 Global

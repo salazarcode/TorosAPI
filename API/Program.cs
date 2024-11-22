@@ -1,15 +1,9 @@
-using System.Data;
-using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Cryptography;
 using Microsoft.OpenApi.Models;
-using Application;
-using Domain.Interfaces;
-using Infra.Repositories.EF.Models;
-using Infra.Repositories.EF.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Infra.Mappings;
+using Repository.Contexts;
 
 namespace API
 {
@@ -24,17 +18,8 @@ namespace API
             //    DevLocal = builder.Configuration.GetConnectionString("DevLocal")
             //});
 
-            builder.Services.AddDbContext<EavContext>(options => {
-                var connStr = builder.Configuration.GetConnectionString("DefaultConnection");
-                options.UseSqlServer(connStr);
-            });
-
-            builder.Services.AddAutoMapper(typeof(MappingProfile));
-
-            builder.Services.AddScoped<XClassService>();
-
-            builder.Services.AddScoped<IXClassRepository, XClassRepository>();
-            builder.Services.AddScoped<IXPropertyRepository, XPropertyRepository>();
+            builder.Services.AddDbContext<DatabaseContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddCors(options =>
             {

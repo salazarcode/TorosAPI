@@ -25,11 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\DTOs\Infra.DTOs.csproj" />
-    <ProjectReference Include="..\Infra.Mappings\Infra.Mappings.csproj" />
-    <ProjectReference Include="..\Repositories.EF\Infra.Repositories.EF.csproj" />
+    <ProjectReference Include="..\Repository\Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>

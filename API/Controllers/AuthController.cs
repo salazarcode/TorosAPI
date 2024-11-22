@@ -1,11 +1,10 @@
-﻿using Infra.DTOs.Requests;
-using Infra.DTOs.Responses;
+﻿using API.Responses;
+using API.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace API.Controllers
 {
@@ -22,7 +21,8 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Hello()
         {
-            return Ok("Despleagdo adecuadamente con GithubActions.");
+            var saludo = "Epale que haces";
+            return Ok("Desplegado adecuadamente con GithubActions. " + saludo);
         }
 
 

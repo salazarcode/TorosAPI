@@ -8,11 +8,8 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 # Copiar los archivos de proyecto y restaurar dependencias
 COPY ["API/API.csproj", "API/"]
-COPY ["Application/Application.csproj", "Application/"]
-COPY ["Domain/Domain.csproj", "Domain/"]
-COPY ["DTOs/Infra.DTOs.csproj", "DTOs/"]
-COPY ["Infra.Mappings/Infra.Mappings.csproj", "Infra.Mappings/"]
-COPY ["Repositories.EF/Infra.Repositories.EF.csproj", "Repositories.EF/"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["Repository/Repository.csproj", "Repository/"]
 RUN dotnet restore "API/API.csproj"
 
 # Copiar todo el código fuente

@@ -61,11 +61,6 @@ namespace Repository.Contexts
                     .WithMany(i => i.CreatedIdentifiers)
                     .HasForeignKey(e => e.CreatedBy)
                     .HasConstraintName("FK_Identifiers_CreatedBy");
-
-                // Username format check constraint
-                entity.ToTable(tb => tb.HasCheckConstraint(
-                    "CK_Identifiers_Username_Format",
-                    "dbo.IsValidUsername(Username) = 1"));
             });
 
             modelBuilder.Entity<Group>(entity =>
@@ -94,11 +89,6 @@ namespace Repository.Contexts
                     .WithMany(i => i.CreatedGroups)
                     .HasForeignKey(e => e.CreatedBy)
                     .HasConstraintName("FK_Groups_CreatedBy");
-
-                // UniqueKey format check constraint
-                entity.ToTable(tb => tb.HasCheckConstraint(
-                    "CK_Groups_UniqueKey_Format",
-                    "dbo.IsKebabCase(UniqueKey) = 1"));
             });
 
             modelBuilder.Entity<IdentifierGroup>(entity =>

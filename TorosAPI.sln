@@ -18,6 +18,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		technical-justification.md = technical-justification.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{2293AADE-E093-4FBB-BBDF-259CB71C4844}"
+	ProjectSection(SolutionItems) = preProject
+		1. CreacionDeTablasDeSeguridad.sql = 1. CreacionDeTablasDeSeguridad.sql
+		2. CreaciónDeUsuarioRoot.sql = 2. CreaciónDeUsuarioRoot.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +49,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2293AADE-E093-4FBB-BBDF-259CB71C4844} = {9F55139C-920B-4D1E-A2DB-67FC6B486234}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD9369A9-6E58-4A3F-842C-F2D9DBED27B1}

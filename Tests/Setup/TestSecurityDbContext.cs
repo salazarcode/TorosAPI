@@ -16,7 +16,7 @@ namespace Tests.Repository
         public TestSecurityDbContext()
         {
             _options = new DbContextOptionsBuilder<DatabaseContext>()
-                .UseSqlServer("Server=.;Database=toros2;Trusted_Connection=True;TrustServerCertificate=True;ConnectRetryCount=3;ConnectRetryInterval=10;Connection Timeout=30;")
+                .UseSqlServer("Server=.;Database=eav;Trusted_Connection=True;TrustServerCertificate=True;ConnectRetryCount=3;ConnectRetryInterval=10;Connection Timeout=30;")
                 .Options;
 
             _context = new DatabaseContext(_options);
@@ -27,7 +27,6 @@ namespace Tests.Repository
 
         public void Dispose()
         {
-            _context.Database.EnsureDeleted();
             _context.Dispose();
         }
     }

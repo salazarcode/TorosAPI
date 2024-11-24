@@ -15,29 +15,8 @@ namespace Repository.Contexts
         {
         }
 
-        [DbFunction("IsValidUsername", Schema = "dbo")]
-        public static bool IsValidUsername(string username) => throw new NotSupportedException();
-
-        [DbFunction("IsKebabCase", Schema = "dbo")]
-        public static bool IsKebabCase(string str) => throw new NotSupportedException();
-
-        [DbFunction("IsCamelCase", Schema = "dbo")]
-        public static bool IsCamelCase(string str) => throw new NotSupportedException();
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasDbFunction(typeof(DatabaseContext)
-                .GetMethod(nameof(IsValidUsername)))
-                .HasName("IsValidUsername");
-
-            modelBuilder.HasDbFunction(typeof(DatabaseContext)
-                .GetMethod(nameof(IsKebabCase)))
-                .HasName("IsKebabCase");
-
-            modelBuilder.HasDbFunction(typeof(DatabaseContext)
-                .GetMethod(nameof(IsCamelCase)))
-                .HasName("IsCamelCase");
-
             modelBuilder.Entity<Identifier>(entity =>
             {
                 entity.ToTable("Identifiers");

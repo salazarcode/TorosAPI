@@ -13,13 +13,14 @@ namespace API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Services.AddSingleton<ConnectionStrings>(new ConnectionStrings
-            //{
-            //    DevLocal = builder.Configuration.GetConnectionString("DevLocal")
-            //});
-
             builder.Services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddSingleton<DatabaseContextFactory>(sp =>
+            {
+                var options = sp.GetRequiredService<DbContextOptions<DatabaseContext>>();
+                return new DatabaseContextFactory(options);
+            });
 
             builder.Services.AddCors(options =>
             {

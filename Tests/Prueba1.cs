@@ -17,20 +17,20 @@ namespace Tests
         {
             using var context = GetContext();
 
-            var identifier = new Identifier();
+            var identifier = new EfIdentifier();
             identifier.Username = "asalazar";
             identifier.Email = "andresalteclado@hotmail.com";
             identifier.PasswordSalt = PasswordHasher.GenerateSalt();
             identifier.PasswordHash = PasswordHasher.GenerateHash(password: "123456", salt: identifier.PasswordSalt);
             identifier.CreatedAt = DateTime.UtcNow;
-            identifier.CreatedBy = context.Set<Identifier>().FirstOrDefault(x => x.Username == "root")?.ID;
-            identifier.PrimaryGroupID = context.Set<Group>().FirstOrDefault(x => x.UniqueKey == "sudo")?.ID;
+            identifier.CreatedBy = context.Set<EfIdentifier>().FirstOrDefault(x => x.Username == "root")?.ID;
+            identifier.PrimaryGroupID = context.Set<EFGroup>().FirstOrDefault(x => x.UniqueKey == "sudo")?.ID;
             identifier.IsActive = true;
 
-            await context.Set<Identifier>().AddAsync(identifier);
+            await context.Set<EfIdentifier>().AddAsync(identifier);
             var result = await context.SaveChangesAsync();
 
-            Identifier? createdUser = await context.Set<Identifier>().FirstOrDefaultAsync(x => x.Username == identifier.Username);
+            EfIdentifier? createdUser = await context.Set<EfIdentifier>().FirstOrDefaultAsync(x => x.Username == identifier.Username);
 
             Assert.NotNull(createdUser);
         }

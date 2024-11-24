@@ -6,9 +6,9 @@ namespace Repository.Contexts
 {
     public class DatabaseContext : DbContext
     {
-        public DbSet<Identifier> Identifiers { get; set; }
-        public DbSet<Group> Groups { get; set; }
-        public DbSet<IdentifierGroup> IdentifierGroups { get; set; }
+        public DbSet<EfIdentifier> Identifiers { get; set; }
+        public DbSet<EFGroup> Groups { get; set; }
+        public DbSet<EFIdentifierGroup> IdentifierGroups { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
@@ -17,7 +17,7 @@ namespace Repository.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Identifier>(entity =>
+            modelBuilder.Entity<EfIdentifier>(entity =>
             {
                 entity.ToTable("Identifiers");
                 entity.HasKey(e => e.ID);
@@ -63,7 +63,7 @@ namespace Repository.Contexts
                     .HasConstraintName("FK_Identifiers_CreatedBy");
             });
 
-            modelBuilder.Entity<Group>(entity =>
+            modelBuilder.Entity<EFGroup>(entity =>
             {
                 entity.ToTable("Groups");
                 entity.HasKey(e => e.ID);
@@ -91,7 +91,7 @@ namespace Repository.Contexts
                     .HasConstraintName("FK_Groups_CreatedBy");
             });
 
-            modelBuilder.Entity<IdentifierGroup>(entity =>
+            modelBuilder.Entity<EFIdentifierGroup>(entity =>
             {
                 entity.ToTable("IdentifierGroups");
                 entity.HasKey(e => new { e.IdentifierID, e.GroupID });

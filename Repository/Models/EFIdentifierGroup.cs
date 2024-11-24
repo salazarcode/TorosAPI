@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Models
 {
-    public class IdentifierGroup
+    public class EFIdentifierGroup
     {
         public int IdentifierID { get; set; }
         public int GroupID { get; set; }
@@ -15,8 +15,8 @@ namespace Repository.Models
         public bool IsActive { get; set; }
 
         // Navigation properties
-        public virtual Identifier Identifier { get; set; } = null!;
-        public virtual Group Group { get; set; } = null!;
-        public virtual Identifier Creator { get; set; } = null!;
+        public virtual EfIdentifier Identifier { get; set; } = null!;
+        public virtual EFGroup Group { get; set; } = null!;
+        public virtual EfIdentifier Creator { get; set; } = null!;
     }
 }

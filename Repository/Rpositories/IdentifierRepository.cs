@@ -1,4 +1,6 @@
-﻿using Domain.Interfaces.Abstract;
+﻿using Domain.Entities;
+using Domain.Interfaces;
+using Domain.Interfaces.Abstract;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contexts;
 using Repository.Models;
@@ -10,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class IdentifierRepository : IRepository<EfIdentifier>
+    public class IdentifierRepository : IIdentifierRepository
     {
         private readonly DatabaseContextFactory _contextFactory;
         private readonly DatabaseContext _context;
@@ -258,6 +260,46 @@ namespace Repository.Repositories
 
             if (string.IsNullOrWhiteSpace(domainType.Email))
                 throw new ArgumentException("Email is required.");
+        }
+
+        Task<Identifier?> IRepository<Identifier>.Get()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Identifier?> IRepository<Identifier>.Get(int ID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Identifier?> Create(Identifier domainType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Identifier?> Update(Identifier domainType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Delete(Identifier domainType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Identifier?> CreateBatch(IEnumerable<Identifier> domainTypes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<(IEnumerable<Identifier?> successes, IEnumerable<(Identifier failedEntity, Exception error)> failures)> UpdateBatch(IEnumerable<Identifier> entities)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Identifier?> DeleteBatch(IEnumerable<Identifier?> entities)
+        {
+            throw new NotImplementedException();
         }
     }
 }

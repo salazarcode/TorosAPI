@@ -4,6 +4,10 @@ using System.Security.Cryptography;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contexts;
+using Repository.Mappings;
+using Autofac.Core;
+using Domain.Interfaces;
+using Repository.Repositories;
 
 namespace API
 {
@@ -16,11 +20,18 @@ namespace API
             builder.Services.AddDbContext<DatabaseContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // Registro de AutoMapper con los perfiles
+            builder.Services.AddAutoMapper(typeof(EfToDomainProfile));
+
             builder.Services.AddSingleton<DatabaseContextFactory>(sp =>
             {
                 var options = sp.GetRequiredService<DbContextOptions<DatabaseContext>>();
                 return new DatabaseContextFactory(options);
             });
+
+
+            //builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+            builder.Services.AddScoped<IIdentifierRepository, IdentifierRepository>();
 
             builder.Services.AddCors(options =>
             {

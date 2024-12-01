@@ -1,31 +1,30 @@
-﻿
--- 3. Insertar datos iniciales
-INSERT INTO Groups (UniqueKey, Description, CreatedBy)
-VALUES ('sudo', 'SuperUsers DO', NULL);
+﻿-- 3. Insertar datos iniciales
+INSERT INTO Groups (Name, UniqueKey, Description, CreatedBy)
+VALUES ('sudo', 'sudo', 'System Administrators', NULL);
 
-INSERT INTO Identifiers (
-    Username,
-    Email,
-    PasswordHash,
-    PasswordSalt,
+INSERT INTO Users (
+    Username, 
+    Email, 
+    PasswordHash, 
+    PasswordSalt, 
     PrimaryGroupID,
     CreatedBy
 )
 VALUES (
     'root',
-    'salarzarcode@gmail.com',
+    'salazarcode@gmail.com',
     'CHANGE_ME_HASH',
     'CHANGE_ME_SALT',
-    (SELECT ID FROM Groups WHERE UniqueKey = 'sudo'),
+    (SELECT ID FROM Groups WHERE Name = 'Administrators'),
     NULL
 );
 
 -- 4. Actualizar el CreatedBy del grupo Administrators
-UPDATE Groups
-SET CreatedBy = (SELECT ID FROM Identifiers WHERE Username = 'root')
-WHERE UniqueKey = 'sudo';
+UPDATE Groups 
+SET CreatedBy = (SELECT ID FROM Users WHERE Username = 'root')
+WHERE Name = 'Administrators';
 
 -- 5. Actualizar el CreatedBy del admin
-UPDATE Identifiers
+UPDATE Users
 SET CreatedBy = ID
 WHERE Username = 'root';

@@ -5,9 +5,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Repository.Contexts;
 using Repository.Mappings;
-using Autofac.Core;
 using Domain.Interfaces;
 using Repository.Repositories;
+using repository.repositories;
 
 namespace API
 {
@@ -18,20 +18,21 @@ namespace API
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DevLocal")));
 
             // Registro de AutoMapper con los perfiles
             builder.Services.AddAutoMapper(typeof(EfToDomainProfile));
 
             builder.Services.AddSingleton<DatabaseContextFactory>(sp =>
             {
-                var options = sp.GetRequiredService<DbContextOptions<DatabaseContext>>();
-                return new DatabaseContextFactory(options);
+                var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
+                optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DevLocal"));
+                return new DatabaseContextFactory(optionsBuilder.Options);
             });
 
 
-            //builder.Services.AddScoped<IGroupRepository, GroupRepository>();
-            builder.Services.AddScoped<IIdentifierRepository, IdentifierRepository>();
+            builder.Services.AddScoped<IGroupsRepository, GroupsRepository>();
+            builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 
             builder.Services.AddCors(options =>
             {

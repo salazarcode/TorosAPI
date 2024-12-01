@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Repository\Repository.csproj" />
+    <ProjectReference Include="..\Hasher\Infrastructure.Hasher.csproj" />
+    <ProjectReference Include="..\Repository\Infrastructure.Repository.EF.csproj" />
   </ItemGroup>
 
   <ItemGroup>

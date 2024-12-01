@@ -1,44 +1,48 @@
 ﻿using AutoMapper;
-using Domain.Interfaces.Abstract;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Repository.Contexts;
-using Repository.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
 
 namespace Repository.Repositories.Abstract
 {
-    public abstract class BaseRepository<TEntity, TDbEntity, TKey> 
-        where TEntity : class 
-        where TDbEntity: class
+    public abstract class BaseRepository<TEntity, TDbEntity, TKey>
+        where TEntity : class
+        where TDbEntity : class
         where TKey : struct
     {
+        protected Expression<Func<TDbEntity, object>>[] _defaultIncludes { get; private set; }
         protected readonly DatabaseContextFactory _contextFactory;
         protected readonly IMapper _mapper;
+        protected IQueryable<TDbEntity> DefaultQuery;
 
         protected BaseRepository(DatabaseContextFactory contextFactory, IMapper mapper)
         {
             _contextFactory = contextFactory;
             _mapper = mapper;
+            _defaultIncludes = Array.Empty<Expression<Func<TDbEntity, object>>>();
+        }
+
+        protected void SetDefaultIncludes(Expression<Func<TDbEntity, object>>[] includes)
+        {
+            _defaultIncludes = includes;
+        }
+
+        protected IQueryable<TDbEntity> ApplyIncludes(DbSet<TDbEntity> dbSet)
+        {
+            var query = dbSet.AsQueryable();
+            return _defaultIncludes.Aggregate(query, (current, include) => current.Include(include));
         }
 
         public virtual async Task<TEntity?> Create(TEntity entity)
         {
             using var context = _contextFactory.CreateContext();
             using var transaction = await context.Database.BeginTransactionAsync();
-
             try
             {
                 var efEntity = _mapper.Map<TDbEntity>(entity);
                 var result = await context.Set<TDbEntity>().AddAsync(efEntity);
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
-
                 return _mapper.Map<TEntity>(result.Entity);
             }
             catch
@@ -51,15 +55,34 @@ namespace Repository.Repositories.Abstract
         public virtual async Task<TEntity?> Get(TKey id)
         {
             using var context = _contextFactory.CreateContext();
-            var efEntity = await context.Set<TDbEntity>().FindAsync(id);
+            var dbSet = context.Set<TDbEntity>();
+            var query = ApplyIncludes(dbSet);
+
+            // Asumiendo que la propiedad ID es la clave primaria
+            var efEntity = await query.FirstOrDefaultAsync(e =>
+                EF.Property<TKey>(e, "ID").Equals(id));
+
             return efEntity != null ? _mapper.Map<TEntity>(efEntity) : null;
         }
 
         public virtual async Task<TEntity?> Get()
         {
             using var context = _contextFactory.CreateContext();
-            var efEntity = await context.Set<TDbEntity>().FirstOrDefaultAsync();
+            var dbSet = context.Set<TDbEntity>();
+            var query = ApplyIncludes(dbSet);
+
+            var efEntity = await query.FirstOrDefaultAsync();
             return efEntity != null ? _mapper.Map<TEntity>(efEntity) : null;
+        }
+
+        public virtual async Task<IEnumerable<TEntity>> GetAll()
+        {
+            using var context = _contextFactory.CreateContext();
+            var dbSet = context.Set<TDbEntity>();
+            var query = ApplyIncludes(dbSet);
+
+            var efEntities = await query.ToListAsync();
+            return _mapper.Map<IEnumerable<TEntity>>(efEntities);
         }
 
         public virtual async Task<TEntity?> Update(TEntity entity)
@@ -71,52 +94,60 @@ namespace Repository.Repositories.Abstract
             {
                 var efEntity = _mapper.Map<TDbEntity>(entity);
                 context.Set<TDbEntity>().Update(efEntity);
+
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
-
-                return _mapper.Map<TEntity>(efEntity);
+                var res = _mapper.Map<TEntity>(efEntity);
+                return res;
             }
-            catch
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                throw;
+                return null;
             }
         }
 
-        public virtual async Task<bool> Delete(TKey id)
+        public virtual async Task<bool> Delete(TEntity entity)
         {
             using var context = _contextFactory.CreateContext();
             using var transaction = await context.Database.BeginTransactionAsync();
 
             try
             {
-                var efEntity = await context.Set<TDbEntity>().FindAsync(id);
-                if (efEntity == null)
-                    return false;
-
+                var efEntity = _mapper.Map<TDbEntity>(entity);
                 context.Set<TDbEntity>().Remove(efEntity);
+
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                throw;
+                return false;
             }
         }
 
-        public virtual Task<bool> Delete(TEntity entity)
+        public virtual async Task<bool> Delete(int ID)
         {
-            var id = GetEntityId(entity);
-            return Delete(id);
-        }
-        protected virtual TKey GetEntityId(TEntity entity) {
-            var property = entity.GetType().GetProperty("ID");
-            var val = property?.GetValue(entity);
-            if (val != null)
-                return (TKey)val;
-            throw new IOException("TKey isn't integer, you'll have to create a custom implementation of BaseRepository.ValidateEntity");
+            using var context = _contextFactory.CreateContext();
+            using var transaction = await context.Database.BeginTransactionAsync();
+
+            try
+            {
+
+                var efEntity = await context.Set<TDbEntity>().FindAsync(ID);
+                context.Set<TDbEntity>().Remove(efEntity);
+
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
         }
     }
 }

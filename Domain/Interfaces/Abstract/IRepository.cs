@@ -10,7 +10,7 @@ namespace Domain.Interfaces.Abstract
     {
         Task<TEntity?> Create(TEntity entity);
         Task<TEntity?> Get(int id);
-        Task<TEntity?> Get();
+        Task<IEnumerable<TEntity>> GetAll();
         Task<TEntity?> Update(TEntity entity);
         Task<bool> Delete(int id);
         Task<bool> Delete(TEntity entity);

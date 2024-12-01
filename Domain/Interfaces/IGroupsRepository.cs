@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Interfaces
 {
-    public interface IGroupRepository:IRepository<Group>
+    public interface IGroupsRepository:IRepository<Group>
     {
     }
 }

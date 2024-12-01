@@ -9,15 +9,21 @@ using Repository.Repositories.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Repository.Repositories
 {
-    public class IdentifierRepository : BaseRepository<Identifier, EfIdentifier, int>, IIdentifierRepository
+    public class UsersRepository : BaseRepository<User, EfUser, int>, IUsersRepository
     {
-        public IdentifierRepository(DatabaseContextFactory contextFactory, IMapper mapper) : base(contextFactory, mapper)
+        public UsersRepository(DatabaseContextFactory contextFactory, IMapper mapper) : base(contextFactory, mapper)
         {
+            SetDefaultIncludes(new Expression<Func<EfUser, object>>[]
+            {
+                x => x.PrimaryGroup, 
+                x => x.GroupUsers
+            });
         }
     }
 }

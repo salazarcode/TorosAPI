@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Repository.Models
 {
-    public class EfIdentifier
+    public class EfUser
     {
         public int ID { get; set; }
+        public Guid PublicId { get; set; }
         public string Username { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
@@ -21,9 +22,8 @@ namespace Repository.Models
 
         // Navigation properties
         public virtual EFGroup? PrimaryGroup { get; set; }
-        public virtual EfIdentifier? Creator { get; set; }
-        public virtual ICollection<EFIdentifierGroup> IdentifierGroups { get; set; } = new List<EFIdentifierGroup>();
-        public virtual ICollection<EfIdentifier> CreatedIdentifiers { get; set; } = new List<EfIdentifier>();
-        public virtual ICollection<EFGroup> CreatedGroups { get; set; } = new List<EFGroup>();
+        public virtual EfUser? Creator { get; set; }
+        public virtual ICollection<EfGroupUser> GroupUsers { get; set; } = new List<EfGroupUser>();
+
     }
 }

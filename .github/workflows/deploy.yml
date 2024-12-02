@@ -6,6 +6,15 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
+    env: 
+        Jwt__Issuer: "auth_service"
+        Jwt__Audience: "micro_services"
+        Logging__LogLevel__Default: "Information"
+        Logging__LogLevel__Microsoft.AspNetCore: "Warning"
+        Jwt__Key: ${{ secrets.JWT__KEY }}
+        ConnectionStrings__DevLocal: ${{ secrets.CONNECTIONSTRINGS__DEVLOCAL }}
+
     steps:
       - name: Checkout código
         uses: actions/checkout@v3

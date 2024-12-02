@@ -1,13 +1,13 @@
 ﻿
 using AutoMapper;
-using Domain.Entities;
-using Domain.Interfaces;
-using Repository.Contexts;
-using Repository.Models;
-using Repository.Repositories.Abstract;
+using Domain.Core.Entities;
+using Domain.Core.Interfaces;
+using Infrastructure.Repository.EF.Abstract;
+using Infrastructure.Repository.EF.Contexts;
+using Infrastructure.Repository.EF.Models;
 using System.Linq.Expressions;
 
-namespace repository.repositories
+namespace Infrastructure.Repository.EF
 {
     public class GroupsRepository : BaseRepository<Group, EFGroup, int>, IGroupsRepository
     {

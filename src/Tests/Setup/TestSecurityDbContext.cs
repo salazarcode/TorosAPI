@@ -1,12 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Repository.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Infrastructure.Repository.EF.Contexts;
+using Microsoft.EntityFrameworkCore;
 
-namespace Tests.Repository
+namespace Tests.Setup
 {
     public class TestSecurityDbContext : IDisposable
     {

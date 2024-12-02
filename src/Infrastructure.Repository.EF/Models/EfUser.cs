@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Repository.Models
+namespace Infrastructure.Repository.EF.Models
 {
     public class EfUser
     {

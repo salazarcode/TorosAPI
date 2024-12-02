@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using Domain.Core.Entities;
 using Domain.Entities;
-using Repository.Models;
+using Infrastructure.Repository.EF.Models;
 
-namespace Repository.Mappings
+namespace Infrastructure.Mapper.AutoMapper.Maps
 {
     public class EfToDomainProfile : Profile
     {

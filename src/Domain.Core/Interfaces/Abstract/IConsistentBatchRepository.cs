@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Interfaces.Abstract
+﻿namespace Domain.Core.Interfaces.Abstract
 {
     public interface IConsistentBatchRepository<TEntity> where TEntity : class
     {

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Repository.Contexts;
+using Infrastructure.Repository.EF.Contexts;
 
-namespace Repository.Repositories.Abstract
+namespace Infrastructure.Repository.EF.Abstract
 {
     public abstract class ConsistentBatchRepository<TEntity, TDbEntity, TKey>
         where TEntity : class

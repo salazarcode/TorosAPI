@@ -1,11 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Repository.Contexts
+namespace Infrastructure.Repository.EF.Contexts
 {
     public class DatabaseContextFactory
     {

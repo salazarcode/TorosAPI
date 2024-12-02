@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Repository.Contexts;
+using Infrastructure.Repository.EF.Contexts;
 using System.Collections.Concurrent;
 
-namespace Repository.Repositories.Abstract
+namespace Infrastructure.Repository.EF.Abstract
 {
     public abstract class ParallelBatchRepository<TEntity, TDbEntity, TKey>
         where TEntity : class

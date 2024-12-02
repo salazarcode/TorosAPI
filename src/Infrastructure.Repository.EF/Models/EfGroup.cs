@@ -1,4 +1,4 @@
-﻿namespace Repository.Models
+﻿namespace Infrastructure.Repository.EF.Models
 {
     public class EFGroup
     {

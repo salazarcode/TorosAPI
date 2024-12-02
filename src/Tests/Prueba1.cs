@@ -1,7 +1,7 @@
-﻿using Infrastructure;
+﻿using Infrastructure.Hasher;
+using Infrastructure.Repository.EF.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository.Models;
-using Tests.Repository;
+using Tests.Setup;
 
 namespace Tests
 {

@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Cryptography;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository.Contexts;
-using Repository.Mappings;
-using Domain.Interfaces;
-using Repository.Repositories;
-using repository.repositories;
+using Domain.Core.Interfaces;
+using Infrastructure.Mapper.AutoMapper.Maps;
+using Infrastructure.Repository.EF.Contexts;
+using Infrastructure.Repository.EF;
 
-namespace API
+namespace Presentation.API
 {
     public class Program
     {
@@ -23,7 +22,7 @@ namespace API
             // Registro de AutoMapper con los perfiles
             builder.Services.AddAutoMapper(typeof(EfToDomainProfile));
 
-            builder.Services.AddSingleton<DatabaseContextFactory>(sp =>
+            builder.Services.AddSingleton(sp =>
             {
                 var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
                 optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DevLocal"));

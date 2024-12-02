@@ -1,14 +1,9 @@
-﻿using Domain.Entities;
-using Domain.Interfaces.Abstract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Core.Entities;
+using Domain.Core.Interfaces.Abstract;
 
-namespace Domain.Interfaces
+namespace Domain.Core.Interfaces
 {
-    public interface IGroupsRepository:IRepository<Group>
+    public interface IGroupsRepository : IRepository<Group>
     {
     }
 }

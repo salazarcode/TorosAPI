@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repository.Models
+namespace Infrastructure.Repository.EF.Models
 {
     public class EfGroupUser
     {

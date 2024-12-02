@@ -1,8 +1,7 @@
-﻿
+﻿using Infrastructure.Repository.EF.Models;
 using Microsoft.EntityFrameworkCore;
-using Repository.Models;
 
-namespace Repository.Contexts
+namespace Infrastructure.Repository.EF.Contexts
 {
     public class DatabaseContext : DbContext
     {

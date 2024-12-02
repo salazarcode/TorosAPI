@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Infrastructure.Repository.EF.Contexts;
 using Microsoft.EntityFrameworkCore;
-using Repository.Contexts;
 using System.Linq.Expressions;
 
-namespace Repository.Repositories.Abstract
+namespace Infrastructure.Repository.EF.Abstract
 {
     public abstract class BaseRepository<TEntity, TDbEntity, TKey>
         where TEntity : class
@@ -60,7 +60,7 @@ namespace Repository.Repositories.Abstract
 
             // Asumiendo que la propiedad ID es la clave primaria
             var efEntity = await query.FirstOrDefaultAsync(e =>
-                EF.Property<TKey>(e, "ID").Equals(id));
+                Microsoft.EntityFrameworkCore.EF.Property<TKey>(e, "ID").Equals(id));
 
             return efEntity != null ? _mapper.Map<TEntity>(efEntity) : null;
         }

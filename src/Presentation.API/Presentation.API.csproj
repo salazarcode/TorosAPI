@@ -26,10 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.Core.csproj" />
-    <ProjectReference Include="..\Hasher\Infrastructure.Hasher.csproj" />
+    <ProjectReference Include="..\Domain.Core\Domain.Core.csproj" />
+    <ProjectReference Include="..\Infrastructure.Hasher\Infrastructure.Hasher.csproj" />
     <ProjectReference Include="..\Infrastructure.Mapper.AutoMapper\Infrastructure.Mapper.AutoMapper.csproj" />
-    <ProjectReference Include="..\Repository\Infrastructure.Repository.EF.csproj" />
+    <ProjectReference Include="..\Infrastructure.Repository.EF\Infrastructure.Repository.EF.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +39,10 @@
     <None Update="Keys\public.key">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DTOs\Groups\Requests\" />
   </ItemGroup>
 
 </Project>

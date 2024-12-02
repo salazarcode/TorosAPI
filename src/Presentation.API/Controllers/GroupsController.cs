@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using AutoMapper;
+using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,15 +12,21 @@ namespace API.Controllers
     public class GroupsController : ControllerBase
     {
         private readonly IGroupsRepository _groupRepository;
-        public GroupsController(IGroupsRepository groupRepository)
+        private readonly IMapper _mapper;
+        public GroupsController(IGroupsRepository groupRepository, IMapper mapper)
         {
-            _groupRepository = groupRepository;                
+            _groupRepository = groupRepository;             
+            _mapper = mapper;
         }
+
+
 
         [HttpGet]
         public async Task<IEnumerable<Group>> Get()
         {
-            return await _groupRepository.GetAll();
+            var res = await _groupRepository.GetAll();
+            var mapped = _mapper.Map<Group>(res);
+            return res;
         }
     }
 }

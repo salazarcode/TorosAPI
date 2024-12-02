@@ -7,16 +7,16 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 # Copiar los archivos de proyecto y restaurar dependencias
-COPY ["Presentation.API/Presentation.API.csproj", "Presentation.API/"]
-COPY ["Domain.Core/Domain.Core.csproj", "Domain.Core/"]
-COPY ["Infrastructure.Hasher/Infrastructure.Hasher.csproj", "Infrastructure.Hasher/"]
-COPY ["Infrastructure.Mapper.AutoMapper/Infrastructure.Mapper.AutoMapper.csproj", "Infrastructure.Mapper.AutoMapper/"]
-COPY ["Infrastructure.Repository.EF/Infrastructure.Repository.EF.csproj", "Infrastructure.Repository.EF/"]
-RUN dotnet restore "Presentation.API/Presentation.API.csproj"
+COPY ["./src/Presentation.API/Presentation.API.csproj", "Presentation.API/"]
+COPY ["./src/Domain.Core/Domain.Core.csproj", "Domain.Core/"]
+COPY ["./src/Infrastructure.Hasher/Infrastructure.Hasher.csproj", "Infrastructure.Hasher/"]
+COPY ["./src/Infrastructure.Mapper.AutoMapper/Infrastructure.Mapper.AutoMapper.csproj", "Infrastructure.Mapper.AutoMapper/"]
+COPY ["./src/Infrastructure.Repository.EF/Infrastructure.Repository.EF.csproj", "Infrastructure.Repository.EF/"]
+RUN dotnet restore "./src/Presentation.API/Presentation.API.csproj"
 
 # Copiar todo el código fuente
 COPY . .
-WORKDIR "/src/Presentation.API"
+WORKDIR "Presentation.API"
 RUN dotnet build "Presentation.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

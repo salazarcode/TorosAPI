@@ -12,12 +12,12 @@ jobs:
 
       - name: Generar llaves RSA
         run: |
-          mkdir -p API/Keys
-          openssl genpkey -algorithm RSA -out API/Keys/private.key -pkeyopt rsa_keygen_bits:2048
-          openssl rsa -pubout -in API/Keys/private.key -out API/Keys/public.key
-          chmod 644 API/Keys/private.key
-          chmod 644 API/Keys/public.key
-          ls -la API/Keys/
+          mkdir -p Keys
+          openssl genpkey -algorithm RSA -out Keys/private.key -pkeyopt rsa_keygen_bits:2048
+          openssl rsa -pubout -in Keys/private.key -out Keys/public.key
+          chmod 644 Keys/private.key
+          chmod 644 Keys/public.key
+          ls -la Keys/
 
       - name: Configurar SSH
         uses: webfactory/ssh-agent@v0.5.4

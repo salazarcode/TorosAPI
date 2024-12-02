@@ -41,6 +41,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+	
+<ItemGroup>
+	<Compile Include="Program.cs" />
+</ItemGroup>
 
   <ItemGroup>
     <Folder Include="DTOs\Groups\Requests\" />

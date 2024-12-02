@@ -15,7 +15,7 @@ COPY ["./src/Infrastructure.Repository.EF/Infrastructure.Repository.EF.csproj", 
 RUN dotnet restore "Presentation.API/Presentation.API.csproj"
 
 # Copiar todo el código fuente
-COPY . .
+COPY ["./src/", "/src/"]
 WORKDIR "Presentation.API"
 RUN dotnet build "Presentation.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 

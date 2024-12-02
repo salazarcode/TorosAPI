@@ -30,10 +30,10 @@ COPY --from=publish /app/publish .
 # Copiar y configurar permisos de las llaves
 COPY ["Keys/", "/app/Keys/"]
 RUN mkdir -p /app/keys-protection && \
-    chmod -R 755 /app/API && \
-    chmod 644 /app/API/Keys/private.key && \
-    chmod 644 /app/API/Keys/public.key && \
-    chmod 755 /app/API/Keys
+    chmod -R 755 /app/Presentation.API && \
+    chmod 644 /app/Keys/private.key && \
+    chmod 644 /app/Keys/public.key && \
+    chmod 755 /app/Keys
 
 ENV ASPNETCORE_URLS=http://+:80
 ENV ASPNETCORE_ENVIRONMENT=Production

@@ -10,7 +10,8 @@ WORKDIR /src
 COPY ["Presentation.API/Presentation.API.csproj", "Presentation.API/"]
 COPY ["Domain.Core/Domain.Core.csproj", "Domain.Core/"]
 COPY ["Infrastructure.Hasher/Infrastructure.Hasher.csproj", "Infrastructure.Hasher/"]
-COPY ["Infrastructure.Repository/Infrastructure.Repository.csproj", "Infrastructure.Repository/"]
+COPY ["Infrastructure.Mapper.AutoMapper/Infrastructure.Mapper.AutoMapper.csproj", "Infrastructure.Mapper.AutoMapper/"]
+COPY ["Infrastructure.Repository.EF/Infrastructure.Repository.EF.csproj", "Infrastructure.Repository.EF/"]
 RUN dotnet restore "Presentation.API/Presentation.API.csproj"
 
 # Copiar todo el código fuente

@@ -27,7 +27,7 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 # Copiar y configurar permisos de las llaves
-COPY ["Presentation.API/Keys/", "/app/Presentation.API/Keys/"]
+COPY ["Keys/", "/app/Keys/"]
 RUN mkdir -p /app/keys-protection && \
     chmod -R 755 /app/API && \
     chmod 644 /app/API/Keys/private.key && \

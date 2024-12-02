@@ -12,7 +12,7 @@ COPY ["./src/Domain.Core/Domain.Core.csproj", "Domain.Core/"]
 COPY ["./src/Infrastructure.Hasher/Infrastructure.Hasher.csproj", "Infrastructure.Hasher/"]
 COPY ["./src/Infrastructure.Mapper.AutoMapper/Infrastructure.Mapper.AutoMapper.csproj", "Infrastructure.Mapper.AutoMapper/"]
 COPY ["./src/Infrastructure.Repository.EF/Infrastructure.Repository.EF.csproj", "Infrastructure.Repository.EF/"]
-RUN dotnet restore "./src/Presentation.API/Presentation.API.csproj"
+RUN dotnet restore "Presentation.API/Presentation.API.csproj"
 
 # Copiar todo el código fuente
 COPY . .

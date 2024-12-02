@@ -8,13 +8,11 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Keys\.gitkeep" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Keys\.gitkeep" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="Keys\.gitkeep">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Contrib.Autofac.DependencyInjection" Version="8.1.0" />

@@ -21,19 +21,25 @@ RUN dotnet build "Presentation.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
+
+# Asegurarse de que el directorio Keys existe
+RUN mkdir -p /app/publish/Keys
+
+# Copiar las llaves antes de la publicación
+COPY ["Keys/", "/app/publish/Keys/"]
+
 RUN dotnet publish "Presentation.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
-# Copiar y configurar permisos de las llaves
-COPY ["Keys/", "/app/Keys/"]
 RUN mkdir -p /app/keys-protection && \
     chmod -R 755 /app/Presentation.API && \
     chmod 644 /app/Keys/private.key && \
     chmod 644 /app/Keys/public.key && \
     chmod 755 /app/Keys
+
+
 
 ENV ASPNETCORE_URLS=http://+:80
 ENV ASPNETCORE_ENVIRONMENT=Production

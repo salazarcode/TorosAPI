@@ -24,6 +24,7 @@ RUN dotnet build "Presentation.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Etapa de publicación
 FROM build AS publish
+WORKDIR "/src/Presentation.API"
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "Presentation.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 

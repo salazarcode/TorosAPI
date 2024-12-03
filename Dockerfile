@@ -25,7 +25,7 @@ RUN dotnet build "Presentation.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 # Etapa de publicación
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Presentation.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "/src/Presentation.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Etapa final
 FROM base AS final
@@ -43,4 +43,4 @@ RUN chmod 644 /app/Keys/*
 ENV ASPNETCORE_URLS=http://+:80
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV DataProtection__Path=/app/keys-protection
-ENTRYPOINT ["dotnet", "Presentation.API.dll"]
+ENTRYPOINT ["dotnet", "/src/Presentation.API.dll"]

@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Insfrastructure.Email.MailKit", "src\Insfrastructure.Email.MailKit\Insfrastructure.Email.MailKit.csproj", "{C90A1799-ACF6-47E4-8A23-EBC45A49D769}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +68,10 @@ Global
 		{654D1153-FEF5-42BF-A7C9-2BF2B97AA092}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{654D1153-FEF5-42BF-A7C9-2BF2B97AA092}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{654D1153-FEF5-42BF-A7C9-2BF2B97AA092}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C90A1799-ACF6-47E4-8A23-EBC45A49D769}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C90A1799-ACF6-47E4-8A23-EBC45A49D769}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C90A1799-ACF6-47E4-8A23-EBC45A49D769}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C90A1799-ACF6-47E4-8A23-EBC45A49D769}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +88,7 @@ Global
 		{D9C5FDAB-AAA3-4B99-9E80-9180E4C2A820} = {AD51D48B-DF8A-48E0-B535-44C7D2E92027}
 		{B9147D3D-4D14-4828-8E34-1C8C79DAAD2F} = {AD51D48B-DF8A-48E0-B535-44C7D2E92027}
 		{5E362483-0F80-48D4-A3CD-2EE80565DBDB} = {AD51D48B-DF8A-48E0-B535-44C7D2E92027}
+		{C90A1799-ACF6-47E4-8A23-EBC45A49D769} = {B9147D3D-4D14-4828-8E34-1C8C79DAAD2F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EA41A154-6814-4D3A-B8F9-D6C839104FB2}

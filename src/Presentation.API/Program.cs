@@ -22,6 +22,8 @@ namespace Presentation.API
             // Registro de AutoMapper con los perfiles
             builder.Services.AddAutoMapper(typeof(EfToDomainProfile));
 
+            builder.Services.AddSingleton<EmailService>();
+
             builder.Services.AddSingleton(sp =>
             {
                 var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();

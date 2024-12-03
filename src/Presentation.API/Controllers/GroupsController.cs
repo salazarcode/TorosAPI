@@ -12,14 +12,14 @@ namespace API.Controllers
     public class GroupsController : ControllerBase
     {
         private readonly IGroupsRepository _groupRepository;
+        private readonly EmailService _emailService;
         private readonly IMapper _mapper;
-        public GroupsController(IGroupsRepository groupRepository, IMapper mapper)
+        public GroupsController(IGroupsRepository groupRepository, IMapper mapper, EmailService emailService)
         {
             _groupRepository = groupRepository;             
             _mapper = mapper;
+            _emailService = emailService;
         }
-
-
 
         [HttpGet]
         public async Task<IEnumerable<Group>> Get()
@@ -27,6 +27,16 @@ namespace API.Controllers
             var res = await _groupRepository.GetAll();
             var mapped = _mapper.Map<Group>(res);
             return res;
+        }
+
+        public record EmailRequest(string emailTo, string subject, string message);
+
+        [HttpPost]
+        [Route("send-mail")]
+        public async Task<IActionResult> SendEmail(EmailRequest request)
+        {
+            await _emailService.SendEmailAsync(request.emailTo, request.subject, request.message);
+            return Ok();
         }
     }
 }

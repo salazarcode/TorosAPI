@@ -13,6 +13,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="appsettings.json" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Include="Keys\.gitkeep">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
@@ -32,6 +36,7 @@
     <ProjectReference Include="..\Infrastructure.Hasher\Infrastructure.Hasher.csproj" />
     <ProjectReference Include="..\Infrastructure.Mapper.AutoMapper\Infrastructure.Mapper.AutoMapper.csproj" />
     <ProjectReference Include="..\Infrastructure.Repository.EF\Infrastructure.Repository.EF.csproj" />
+    <ProjectReference Include="..\Insfrastructure.Email.MailKit\Insfrastructure.Email.MailKit.csproj" />
   </ItemGroup>
 
   <ItemGroup>

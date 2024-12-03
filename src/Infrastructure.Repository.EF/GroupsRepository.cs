@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Core.Entities;
 using Domain.Core.Interfaces;
 using Infrastructure.Repository.EF.Abstract;

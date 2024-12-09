@@ -14,7 +14,7 @@ COPY ["src/Presentation.API/Presentation.API.csproj", "Presentation.API/"]
 COPY ["src/Domain.Core/Domain.Core.csproj", "Domain.Core/"]
 COPY ["src/Infrastructure.Hasher/Infrastructure.Hasher.csproj", "Infrastructure.Hasher/"]
 COPY ["src/Infrastructure.Mapper.AutoMapper/Infrastructure.Mapper.AutoMapper.csproj", "Infrastructure.Mapper.AutoMapper/"]
-COPY ["src/Insfrastructure.Email.MailKit/Insfrastructure.Email.MailKit.csproj", "Insfrastructure.Email.MailKit/"]
+COPY ["src/Insfrastructure.Email.AwsSES/Insfrastructure.Email.AwsSES.csproj", "Insfrastructure.Email.AwsSES/"]
 COPY ["src/Infrastructure.Repository.EF/Infrastructure.Repository.EF.csproj", "Infrastructure.Repository.EF/"]
 RUN dotnet restore "Presentation.API/Presentation.API.csproj"
 

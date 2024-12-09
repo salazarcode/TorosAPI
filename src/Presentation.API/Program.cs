@@ -7,6 +7,8 @@ using Domain.Core.Interfaces;
 using Infrastructure.Mapper.AutoMapper.Maps;
 using Infrastructure.Repository.EF.Contexts;
 using Infrastructure.Repository.EF;
+using Application.Services.Interfaces;
+using Infrastructure.Email.AwsSES;
 
 namespace Presentation.API
 {
@@ -22,7 +24,7 @@ namespace Presentation.API
             // Registro de AutoMapper con los perfiles
             builder.Services.AddAutoMapper(typeof(EfToDomainProfile));
 
-            builder.Services.AddSingleton<EmailService>();
+            builder.Services.AddSingleton<IEmailService, AwsSesEmailService>();
 
             builder.Services.AddSingleton(sp =>
             {

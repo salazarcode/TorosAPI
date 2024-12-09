@@ -32,11 +32,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Application\Application.csproj" />
+    <ProjectReference Include="..\..\Infrastructure.Email.AwsSES\Infrastructure.Email.AwsSES.csproj" />
     <ProjectReference Include="..\Domain.Core\Domain.Core.csproj" />
     <ProjectReference Include="..\Infrastructure.Hasher\Infrastructure.Hasher.csproj" />
     <ProjectReference Include="..\Infrastructure.Mapper.AutoMapper\Infrastructure.Mapper.AutoMapper.csproj" />
     <ProjectReference Include="..\Infrastructure.Repository.EF\Infrastructure.Repository.EF.csproj" />
-    <ProjectReference Include="..\Insfrastructure.Email.MailKit\Insfrastructure.Email.MailKit.csproj" />
   </ItemGroup>
 
   <ItemGroup>

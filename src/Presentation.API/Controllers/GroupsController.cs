@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.Services.Interfaces;
+using AutoMapper;
 using Domain.Core.Entities;
 using Domain.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +13,9 @@ namespace API.Controllers
     public class GroupsController : ControllerBase
     {
         private readonly IGroupsRepository _groupRepository;
-        private readonly EmailService _emailService;
+        private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
-        public GroupsController(IGroupsRepository groupRepository, IMapper mapper, EmailService emailService)
+        public GroupsController(IGroupsRepository groupRepository, IMapper mapper, IEmailService emailService)
         {
             _groupRepository = groupRepository;             
             _mapper = mapper;
@@ -35,7 +36,7 @@ namespace API.Controllers
         [Route("send-mail")]
         public async Task<IActionResult> SendEmail(EmailRequest request)
         {
-            await _emailService.SendEmailAsync(request.emailTo, request.subject, request.message);
+            await _emailService.SendEmailAsync(request.emailTo, request.subject, request.message, "");
             return Ok();
         }
     }

@@ -2,8 +2,9 @@
 using MailKit.Security;
 using MimeKit;
 using Microsoft.Extensions.Configuration;
+using Application.Services.Interfaces;
 
-public class EmailService
+public class EmailService : IEmailService
 {
     private readonly IConfiguration _configuration;
 
@@ -12,7 +13,7 @@ public class EmailService
         _configuration = configuration;
     }
 
-    public async Task SendEmailAsync(string toEmail, string subject, string htmlStringifiedMessageBody)
+    public async Task<bool> SendEmailAsync(string toEmail, string subject, string htmlStringifiedMessageBody, string plainTextContent = "")
     {
         var emailSettings = _configuration.GetSection("EmailSettings");
 
@@ -46,5 +47,7 @@ public class EmailService
         {
             await smtp.DisconnectAsync(true);
         }
+
+        return true;
     }
 }

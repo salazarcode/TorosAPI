@@ -2,11 +2,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Cryptography;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using Domain.Core.Interfaces;
-using Infrastructure.Mapper.AutoMapper.Maps;
-using Infrastructure.Repository.EF.Contexts;
-using Infrastructure.Repository.EF;
 using Application.Services.Interfaces;
 using Infrastructure.Email.AwsSES;
 
@@ -18,24 +13,14 @@ namespace Presentation.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<DatabaseContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DevLocal")));
-
             // Registro de AutoMapper con los perfiles
-            builder.Services.AddAutoMapper(typeof(EfToDomainProfile));
+            //builder.Services.AddAutoMapper(typeof(EfToDomainProfile));
 
             builder.Services.AddSingleton<IEmailService, AwsSesEmailService>();
 
-            builder.Services.AddSingleton(sp =>
-            {
-                var optionsBuilder = new DbContextOptionsBuilder<DatabaseContext>();
-                optionsBuilder.UseSqlServer(builder.Configuration.GetConnectionString("DevLocal"));
-                return new DatabaseContextFactory(optionsBuilder.Options);
-            });
 
-
-            builder.Services.AddScoped<IGroupsRepository, GroupsRepository>();
-            builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+            //builder.Services.AddScoped<IGroupsRepository, GroupsRepository>();
+            //builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 
             builder.Services.AddCors(options =>
             {

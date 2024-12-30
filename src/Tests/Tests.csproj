@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure.Repository.MongoDB\Infrastructure.Repository.MongoDB.csproj" />
     <ProjectReference Include="..\Infrastructure.Hasher\Infrastructure.Hasher.csproj" />
-    <ProjectReference Include="..\Infrastructure.Repository.EF\Infrastructure.Repository.EF.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -15,7 +15,7 @@ COPY ["src/Domain.Core/Domain.Core.csproj", "Domain.Core/"]
 COPY ["src/Infrastructure.Hasher/Infrastructure.Hasher.csproj", "Infrastructure.Hasher/"]
 COPY ["src/Infrastructure.Mapper.AutoMapper/Infrastructure.Mapper.AutoMapper.csproj", "Infrastructure.Mapper.AutoMapper/"]
 COPY ["src/Insfrastructure.Email.AwsSES/Insfrastructure.Email.AwsSES.csproj", "Insfrastructure.Email.AwsSES/"]
-COPY ["src/Infrastructure.Repository.EF/Infrastructure.Repository.EF.csproj", "Infrastructure.Repository.EF/"]
+COPY ["src/Infrastructure.Repository.MongoDB/Infrastructure.Repository.MongoDB.csproj", "Infrastructure.Repository.MongoDB/"]
 RUN dotnet restore "Presentation.API/Presentation.API.csproj"
 
 # Copiar el resto del código fuente y construir

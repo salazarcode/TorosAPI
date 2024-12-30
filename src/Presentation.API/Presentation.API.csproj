@@ -37,7 +37,6 @@
     <ProjectReference Include="..\Domain.Core\Domain.Core.csproj" />
     <ProjectReference Include="..\Infrastructure.Hasher\Infrastructure.Hasher.csproj" />
     <ProjectReference Include="..\Infrastructure.Mapper.AutoMapper\Infrastructure.Mapper.AutoMapper.csproj" />
-    <ProjectReference Include="..\Infrastructure.Repository.EF\Infrastructure.Repository.EF.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\Groups\Requests\" />
+    <Folder Include="DTOs\" />
   </ItemGroup>
 
 </Project>

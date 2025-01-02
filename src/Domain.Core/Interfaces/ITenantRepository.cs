@@ -3,7 +3,7 @@ using Domain.Core.Interfaces.Abstract;
 
 namespace Domain.Core.Interfaces
 {
-    public interface IGroupsRepository : IRepository<Group>
+    public interface ITenantRepository : IRepository<DomainTenant>
     {
     }
 }

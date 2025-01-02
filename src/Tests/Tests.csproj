@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure.Repository.MongoDB\Infrastructure.Repository.MongoDB.csproj" />
+    <ProjectReference Include="..\..\Randomizer\Infrastructure.Randomizer.Custom.csproj" />
     <ProjectReference Include="..\Infrastructure.Hasher\Infrastructure.Hasher.csproj" />
   </ItemGroup>
 

@@ -40,6 +40,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Email.AwsSES
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Repository.MongoDB", "Infrastructure.Repository.MongoDB\Infrastructure.Repository.MongoDB.csproj", "{01EFF0A5-6B87-4287-9F66-6B6077C5E49F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Randomizer.Custom", "Randomizer\Infrastructure.Randomizer.Custom.csproj", "{BA2DC73B-FDEA-4B22-BDBD-713C3EB144DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,6 +80,10 @@ Global
 		{01EFF0A5-6B87-4287-9F66-6B6077C5E49F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01EFF0A5-6B87-4287-9F66-6B6077C5E49F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01EFF0A5-6B87-4287-9F66-6B6077C5E49F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA2DC73B-FDEA-4B22-BDBD-713C3EB144DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA2DC73B-FDEA-4B22-BDBD-713C3EB144DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA2DC73B-FDEA-4B22-BDBD-713C3EB144DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA2DC73B-FDEA-4B22-BDBD-713C3EB144DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +102,7 @@ Global
 		{F6FE9E61-23B9-4C81-9216-3CD8412873F0} = {661CC174-4873-46D6-B14B-79FEA0E44636}
 		{DA785079-5C9E-4D76-BEFE-971F30940954} = {B9147D3D-4D14-4828-8E34-1C8C79DAAD2F}
 		{01EFF0A5-6B87-4287-9F66-6B6077C5E49F} = {B9147D3D-4D14-4828-8E34-1C8C79DAAD2F}
+		{BA2DC73B-FDEA-4B22-BDBD-713C3EB144DF} = {B9147D3D-4D14-4828-8E34-1C8C79DAAD2F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EA41A154-6814-4D3A-B8F9-D6C839104FB2}

@@ -34,6 +34,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure.Email.AwsSES\Infrastructure.Email.AwsSES.csproj" />
+    <ProjectReference Include="..\..\Infrastructure.Repository.MongoDB\Infrastructure.Repository.MongoDB.csproj" />
     <ProjectReference Include="..\Domain.Core\Domain.Core.csproj" />
     <ProjectReference Include="..\Infrastructure.Hasher\Infrastructure.Hasher.csproj" />
     <ProjectReference Include="..\Infrastructure.Mapper.AutoMapper\Infrastructure.Mapper.AutoMapper.csproj" />

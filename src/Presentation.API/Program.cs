@@ -4,6 +4,8 @@ using System.Security.Cryptography;
 using Microsoft.OpenApi.Models;
 using Application.Services.Interfaces;
 using Infrastructure.Email.AwsSES;
+using Infrastructure.Repository.MongoDB.Repositories;
+using Domain.Core.Interfaces;
 
 namespace Presentation.API
 {
@@ -19,8 +21,9 @@ namespace Presentation.API
             builder.Services.AddSingleton<IEmailService, AwsSesEmailService>();
 
 
-            //builder.Services.AddScoped<IGroupsRepository, GroupsRepository>();
-            //builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+            builder.Services.AddScoped<ITenantRepository, TenantRepository>();
+            builder.Services.AddScoped<IClassRepository, ClassRepository>();
+            builder.Services.AddScoped<IObjectRepository, ObjectRepository>();
 
             builder.Services.AddCors(options =>
             {
@@ -75,7 +78,7 @@ namespace Presentation.API
 
             builder.Services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "CustomBPMS API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Toros API", Version = "v1" });
 
                 // Indicar que int? es nullable
                 c.MapType<int?>(() => new OpenApiSchema { Type = "integer", Format = "int32", Nullable = true });
